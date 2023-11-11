@@ -1,0 +1,53 @@
+@import "../../../../variables.scss";
+
+section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: $whiteSmoke;
+}
+
+span {
+  display: flex;
+  gap: .5em;
+  font-size: 1.75rem;
+  color: $mint;
+
+  fa-icon {
+    font-size: 2rem;
+    color: $whiteSmoke;
+    animation: swing 5s ease-in-out infinite;
+  }
+}
+
+h2 {
+  font-size: 3.5rem;
+}
+
+p {
+  font-size: 1.15rem;
+}
+
+a {
+  transition: all .35s ease-in-out;
+  border-bottom: 1px solid transparent;
+  outline: none;
+  color: $mint;
+
+  &:hover,
+  &:focus {
+    border-bottom-color: $jasmine;
+    color: $jasmine;
+  }
+}
+
+@keyframes swing {
+  50% {
+    transform: translateX(100px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

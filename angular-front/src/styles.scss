@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&family=Oswald:wght@400;700&display=swap");
+@import "variables.scss";
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "bootstrap/scss/bootstrap";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "League Spartan", sans-serif;
+  // font-family: 'Oswald', sans-serif;
+}
+
+fa-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+  margin: 0;
+}
+
+h1 {
+  font-family: "Oswald", sans-serif;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  display: grid; // make the app-root fill the min 100svh
+  grid-template-rows: 1fr; // only app-root is direct body children
+  min-height: 100svh;
+  padding: 0.75rem 2rem;
+  background-color: $night;
+
+  app-root {
+    display: flex;
+    flex-direction: column;
+
+    footer {
+      margin-top: auto;
+    }
+  }
+}
+
+header,
+main,
+footer {
+  width: 100%;
+  max-width: 96rem; // 1536px
+  margin: 0 auto;
+}
+
+a {
+  font: inherit;
+  color: inherit;
+  text-decoration: inherit;
+}
+
+// Custom Scrollbar
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba($color: #000000, $alpha: 0.15);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, $mint, $jasmine);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, rgba($color: $mint, $alpha: 0.85), rgba($color: $jasmine, $alpha: 0.85));
+}

@@ -1,0 +1,39 @@
+<section>
+  <article>
+    <h2>Login to Your Account</h2>
+    <p class="sub-text">Take control of your day with our secure task management app. Stay organized, stay efficient, and get things done hassle-free.</p>
+  </article>
+  <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" #formDir="ngForm">
+    <div class="form-group mb-3">
+      <div>
+        <input type="text" id="username" formControlName="username" placeholder="username" required>
+        <label for="usernameInput" class="form-label" aria-placeholder="username">Username</label>
+      </div>
+      <div class="wrong-container mt-1" *ngIf="username?.invalid && formDir.submitted">
+        <p *ngIf="username?.errors?.['required']">Username is required</p>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div>
+        <input appDisableCopyPaste class="password" formControlName="password" type="{{showPassword ? 'text' : 'password'}}" id="password" placeholder="password" required title="U can't copy/paste this input >:(">
+        <label for="password" class="form-label" aria-placeholder="password">Password</label>
+        <fa-icon [icon]="showPassword ? eyeSlash : eye" tabindex="0" (keydown)="togglePassword($event)" (click)="togglePassword()"></fa-icon>
+      </div>
+      <div class="wrong-container mt-1" *ngIf="password?.invalid && formDir.submitted">
+        <p *ngIf="password?.errors?.['required']">Password is required</p>
+      </div>
+    </div>
+    <div class="button-container">
+      <a routerLink="/">
+        <button class="forgot-btn">
+          Forgot Password?
+        </button>
+      </a>
+      <button type="submit" class="login-btn">
+        <span>Login</span>
+        <fa-icon [icon]="arrowRight"></fa-icon>
+      </button>
+    </div>
+  </form>
+  <p>Don't have an account? <a routerLink="/sign-up/">Create one</a>.</p>
+</section>

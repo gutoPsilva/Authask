@@ -1,0 +1,16 @@
+<header>
+  <!-- <div class="logo-wrap">
+    <h1 class="logo">Authask</h1>
+  </div> -->
+  <h1>Authask</h1>
+  <nav>
+    <ul *ngIf="!loggedUser">
+      <li><a routerLink="/login">Login</a></li>
+      <li><a routerLink="/sign-up">Sign up</a></li>
+    </ul>
+    <ul *ngIf="loggedUser">
+      <li><a routerLink="/task-list">Task List</a></li>
+      <li><a routerLink="/logout">Logout</a></li>
+    </ul>
+  </nav>
+</header>
