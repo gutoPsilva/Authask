@@ -3,11 +3,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 
 @Injectable()
-export class LocalAuthGuard extends AuthGuard('local') {
+export class UnifiedAuthGuard extends AuthGuard(['local', 'discord']) {
   async canActivate(context: ExecutionContext) {
     const result = (await super.canActivate(context)) as boolean;
-    const request = context.switchToHttp().getRequest();
-    await super.logIn(request);
+    const req = context.switchToHttp().getRequest();
+    await super.logIn(req);
     return result;
   }
 }

@@ -3,6 +3,8 @@ import { PassportSerializer } from '@nestjs/passport';
 import { LocalUser } from 'src/entities/LocalUser.entity';
 import { UsersService } from 'src/users/services/users/users.service';
 import { DoneCallback } from 'passport';
+import { DiscordUser } from 'src/entities/DiscordUser.entity';
+import { userStrategy } from 'src/utils/interfaces e types/user.interface';
 
 export class SessionSerializer extends PassportSerializer {
   constructor(
@@ -11,14 +13,27 @@ export class SessionSerializer extends PassportSerializer {
     super();
   }
 
-  serializeUser(localUser: LocalUser, done: DoneCallback) {
-    console.log('Serializing user');
-    done(null, localUser.id);
+  serializeUser(user: LocalUser | DiscordUser, done: DoneCallback) {
+    done(null, {
+      id: user.id,
+      strategy: user instanceof LocalUser ? 'local' : 'discord',
+    });
   }
 
-  async deserializeUser(id: number, done: DoneCallback) {
-    console.log('Deserializing user');
-    const userDB = await this.userService.findLocalUserById(id);
-    return userDB ? done(null, userDB) : done(null, null);
+  async deserializeUser(
+    sessionUser: { id: number; strategy: userStrategy },
+    done: DoneCallback,
+  ) {
+    const { id, strategy } = sessionUser;
+
+    try {
+      const user =
+        strategy === 'local'
+          ? await this.userService.findLocalUser({ id: id })
+          : await this.userService.findDiscordUser({ id: id });
+      return user ? done(null, user) : done(null, null);
+    } catch (err) {
+      done(err, null);
+    }
   }
 }

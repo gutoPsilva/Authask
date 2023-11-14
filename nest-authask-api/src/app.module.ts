@@ -7,22 +7,24 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { Session } from './entities/Session.entity';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'admin',
-      database: 'authask',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
       entities: [LocalUser, DiscordUser, Task, Session],
       synchronize: true,
     }),
     UsersModule,
     AuthModule,
     PassportModule.register({ session: true }),
+    TasksModule,
   ],
   controllers: [],
   providers: [],

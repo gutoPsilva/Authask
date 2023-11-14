@@ -7,6 +7,9 @@ export class DiscordUser {
   id: number;
 
   @Column()
+  discordId: string;
+
+  @Column()
   username: string;
 
   @OneToMany(() => Task, (task) => task.discordUser)

@@ -1,3 +1,6 @@
+import { config } from 'dotenv';
+config(); // MUST load environment variables from .env file BEFORE using them to connect to DB
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -20,20 +23,18 @@ async function bootstrap() {
 
   app.use(
     session({
-      secret: 'megaUltraAmazingPlusExtraIncredibleSecret',
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        maxAge: 1000 * 60 * 60 * 4, // a logged session will last 4 hours
       },
-      store: new TypeormStore({
-        cleanupLimit: 10,
-      }).connect(sessionRepository),
+      store: new TypeormStore().connect(sessionRepository),
     }),
   );
 
   app.use(passport.initialize());
   app.use(passport.session());
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

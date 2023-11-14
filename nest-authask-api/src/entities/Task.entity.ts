@@ -1,5 +1,11 @@
 import { TaskStatus } from 'src/utils/interfaces e types/task.interface';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { LocalUser } from './LocalUser.entity';
 import { DiscordUser } from './DiscordUser.entity';
 
@@ -20,11 +26,14 @@ export class Task {
   @Column({ default: false })
   urgent: boolean;
 
-  @Column()
-  createdAt: Date;
+  @Column() // not nullable, however the user may not provide it, and so it will be generated automatically at the instant of the registration, but he can change it later
+  startsAt: Date;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true }) // optional
   endsAt: Date;
+
+  @CreateDateColumn({ type: 'timestamp' }) // this one is generated automatically at the instant of the registration and cannot be changed, it just stores the moment when the task was created, and not when the task was started
+  createdAt: Date;
 
   @ManyToOne(() => LocalUser, (localUser) => localUser.tasks)
   localUser: LocalUser;
