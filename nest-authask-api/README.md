@@ -92,7 +92,7 @@ The id and createdAt fields are inserted automatically by the API, the other pro
 
 ### Create Task
 
-In order to create a task, access the endpoint `/tasks` with a POST method, the client should provide the following object:
+In order to create a task, access the endpoint `/tasks` with a POST method an object containing the new task properties will be returned, and the client should provide the following object:
 
 ```json
 {
@@ -149,13 +149,13 @@ EndsAt is optional, however it can assume a null value.
 
 ### Update Task
 
-To update a task, adhere to the validation criteria outlined in the "Create Task" section for the respective fields. Access the ``/tasks/:id`` endpoint using the PUT method, where :id should correspond to the task's id. All properties are optional, and the task will only update the provided values.
+To update a task, adhere to the validation criteria outlined in the "Create Task" section for the respective fields. Access the ``/tasks/:id`` endpoint using the PUT method, where :id should correspond to the task's id. The endpoint should return the object with the properties updated. All properties are optional, and the task will only update the provided values.
 
 However, it's important to note that if the task you intend to modify does not belong to the currently authenticated user, you lack the authorization to manipulate it.
 
 ### Delete Task
 
-To delete a task, use the DELETE method on the ``/tasks/:id`` endpoint, where :id should match the task's identifier.
+To delete a task, use the DELETE method on the ``/tasks/:id`` endpoint, where :id should match the task's identifier. If the task was deleted, it should return `true`, else, returns `false`.
 
 Similar to updating a task, it's important to highlight that deletion is only permissible if the task is associated with the authenticated user.
 

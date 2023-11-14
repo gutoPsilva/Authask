@@ -1,8 +1,18 @@
-import { Controller, Post, UseGuards, Body, Get, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Body,
+  Get,
+  Req,
+  HttpException,
+  HttpStatus,
+  Res,
+} from '@nestjs/common';
 import { RegisterLocalUserDto } from 'src/auth/dtos/registerLocalUser.dto';
 import { UnifiedAuthGuard } from 'src/auth/utils/Guards/UnifiedGuards';
 import { UsersService } from 'src/users/services/users/users.service';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -32,13 +42,19 @@ export class AuthController {
   }
 
   @Post('logout')
-  logout(@Req() req: Request) {
+  logout(@Req() req: Request, @Res() res: Response) {
     if (req.user) {
       req.logout((err) => {
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          new HttpException(
+            'Error logging out',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
       });
-      return 'Logged out successfully';
+      return res.status(HttpStatus.OK).send('Logged out');
     }
-    return 'No user to logout';
+    return res.status(HttpStatus.NOT_FOUND).send('No user to log out');
   }
 }
