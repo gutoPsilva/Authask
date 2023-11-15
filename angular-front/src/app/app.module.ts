@@ -16,6 +16,7 @@ import { SignUpComponent } from './components/pages/sign-up/sign-up.component';
 import { DisableCopyPasteDirective } from './directives/disable-copy-paste.directive';
 import { PageNotFoundComponent } from './components/pages/page-not-found/page-not-found.component';
 import { TaskListComponent } from './components/pages/task-list/task-list.component';
+import { PermissionsService } from './guards/login.guard';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,7 @@ import { TaskListComponent } from './components/pages/task-list/task-list.compon
     NgbModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [PermissionsService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
