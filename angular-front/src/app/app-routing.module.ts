@@ -4,9 +4,14 @@ import { LoginComponent } from './components/pages/login/login.component';
 import { SignUpComponent } from './components/pages/sign-up/sign-up.component';
 import { PageNotFoundComponent } from './components/pages/page-not-found/page-not-found.component';
 import { TaskListComponent } from './components/pages/task-list/task-list.component';
+import { LoginGuard } from './guards/login.guard';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'task-list', component: TaskListComponent },
+  {
+    path: 'task-list',
+    component: TaskListComponent,
+    canActivate: [LoginGuard],
+  },
   { path: 'sign-up', component: SignUpComponent },
   { path: '404_page-not-found', component: PageNotFoundComponent },
   { path: '**', redirectTo: '404_page-not-found' },

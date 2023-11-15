@@ -20,8 +20,10 @@ section {
     a {
       color: $mint;
       transition: color 0.15s cubic-bezier(0.47, 0, 0.745, 0.715);
+      outline: none;
 
-      &:hover {
+      &:hover,
+      &:focus {
         color: $jasmine;
       }
     }
@@ -128,10 +130,6 @@ form {
   display: flex;
   gap: 1rem;
 
-  a {
-    outline: none;
-  }
-
   button {
     display: flex;
     flex: 1;
@@ -197,6 +195,8 @@ form {
 }
 
 .forgot-btn {
+  max-width: fit-content;
+
   &::after,
   &::before {
     left: 0;
@@ -219,4 +219,19 @@ form {
 
 .wrong-container {
   color: $coralRed;
+}
+
+.tparty-login {
+  display: flex;
+  gap: 0.5em;
+  .brand {
+    transition: color 350ms ease-in-out;
+    margin-top: -0.15em;
+    outline: none;
+
+    &:hover,
+    &:focus {
+      color: $mint;
+    }
+  }
 }

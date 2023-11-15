@@ -3,3 +3,27 @@
 main {
   margin-block: auto;
 }
+
+// bootstrap alert component
+
+ngb-alert {
+  position: fixed; // even if window is scrolled, the alert still stays in the same place
+  top: 3rem;
+  right: 0;
+  left: 0;
+  max-width: fit-content;
+  margin: 0 auto;
+  z-index: 9999;
+  background: rgba($color: #000000, $alpha: 0.25);
+  color: white;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid $mint;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.loading-alert {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}

@@ -1,6 +1,13 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { faArrowRight, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
+import {
+  faArrowRight,
+  faEye,
+  faEyeSlash,
+} from '@fortawesome/free-solid-svg-icons';
+import { AlertService } from 'src/app/services/alert/alert.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -11,7 +18,8 @@ export class SignUpComponent {
   showPassword: boolean = false;
   showCpassword: boolean = false;
   unmatchingPasswords: boolean = false;
-  passwordPattern = '(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]*'; // 1 lower, 1 upper, 1 number, 1 special in any order
+  passwordPattern =
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*_?.])[A-Za-z\\d!@#$%^&*_?.]*$'; // 1 lower, 1 upper, 1 number, 1 special in any order
 
   signForm!: FormGroup;
 
@@ -19,10 +27,23 @@ export class SignUpComponent {
   eye = faEye;
   eyeSlash = faEyeSlash;
 
+  constructor(
+    private authService: AuthService,
+    private alertService: AlertService,
+    private router: Router
+  ) {}
+
   ngOnInit(): void {
     this.signForm = new FormGroup({
-      username: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      username: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(255),
+      ]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(255),
+      ]),
       password: new FormControl('', [
         Validators.required,
         Validators.minLength(8),
@@ -48,13 +69,30 @@ export class SignUpComponent {
     return this.signForm.get('confirmPassword');
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.password?.value !== this.confirmPassword?.value) {
       this.unmatchingPasswords = true;
       return; // do not proced even if all fields are fullfield, because these two inputs must be the same.
     } else this.unmatchingPasswords = false;
 
-    if (this.signForm.valid) console.log('valid');
+    if (this.signForm.valid) {
+      const { confirmPassword, ...registerInfo } = this.signForm.value;
+      this.alertService.showLoadingAlert(
+        'Creating user, please wait a moment...'
+      );
+      
+      await this.authService
+        .registerLocalUser(registerInfo)
+        .subscribe((res) => {
+          console.log(res);
+          this.alertService.showLoadingAlert(''); // removes the loading & shows the success
+          this.alertService.showAlert(
+            // selfClosingAlert in 5secs
+            'Account created successfully! Now you can login.'
+          );
+          this.router.navigate(['/login']);
+        });
+    }
   }
 
   togglePassword(field: 'password' | 'cpassword', event?: KeyboardEvent) {

@@ -4,13 +4,13 @@
   </div> -->
   <h1>Authask</h1>
   <nav>
-    <ul *ngIf="!loggedUser">
+    <ul *ngIf="!user">
       <li><a routerLink="/login">Login</a></li>
       <li><a routerLink="/sign-up">Sign up</a></li>
     </ul>
-    <ul *ngIf="loggedUser">
+    <ul *ngIf="user">
       <li><a routerLink="/task-list">Task List</a></li>
-      <li><a routerLink="/logout">Logout</a></li>
+      <li><button (click)="logout()" class="logout-btn">Logout</button></li>
     </ul>
   </nav>
 </header>

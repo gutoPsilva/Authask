@@ -1,5 +1,16 @@
 <app-header></app-header>
 <main>
+  <ngb-alert
+    #selfClosingAlert
+    *ngIf="alertMessage"
+    type="success"
+    (closed)="alertMessage = ''"
+    >{{ alertMessage }}
+  </ngb-alert>
+  <ngb-alert class="loading-alert" *ngIf="loadingMessage" [dismissible]="false">
+    {{ loadingMessage }}
+    <fa-icon [icon]="loadingIcon" [spin]="true"></fa-icon>
+  </ngb-alert>
   <router-outlet></router-outlet>
 </main>
 <app-footer></app-footer>

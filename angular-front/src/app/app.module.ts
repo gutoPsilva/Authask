@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { HttpClientModule } from '@angular/common/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -25,7 +26,7 @@ import { TaskListComponent } from './components/pages/task-list/task-list.compon
     SignUpComponent,
     DisableCopyPasteDirective,
     PageNotFoundComponent,
-    TaskListComponent
+    TaskListComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,8 +35,9 @@ import { TaskListComponent } from './components/pages/task-list/task-list.compon
     FontAwesomeModule,
     ReactiveFormsModule,
     NgbModule,
+    HttpClientModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

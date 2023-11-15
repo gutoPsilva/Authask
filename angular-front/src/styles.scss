@@ -1,6 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&family=Oswald:wght@400;700&display=swap");
 @import "variables.scss";
-@import "~bootstrap/dist/css/bootstrap.css";
+
+// ngbAlert close button variables
+$btn-close-color: white;
+$btn-close-opacity: .75;
+$btn-close-hover-opacity: 1;
+$btn-close-disabled-opacity: .75;
+
 @import "bootstrap/scss/bootstrap";
 
 *,
@@ -102,4 +108,9 @@ a {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(to bottom, rgba($color: $mint, $alpha: 0.85), rgba($color: $jasmine, $alpha: 0.85));
+}
+
+// fontawesome spin-animation
+.fa-spin {
+  animation: fa-spin 1.5s infinite linear !important;
 }

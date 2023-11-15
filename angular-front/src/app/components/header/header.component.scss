@@ -11,7 +11,7 @@ nav {
   width: 100%;
   display: flex;
   gap: .5rem;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
 }
 
@@ -81,6 +81,21 @@ ul {
     }
     &:hover a,
     a:focus {
+      color: $mint;
+    }
+  }
+
+  .logout-btn {
+    background-color: transparent;
+    border: none;
+    color: $whiteSmoke;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 350ms ease-in-out;
+    outline: none;
+
+    &:hover,
+    &:focus {
       color: $mint;
     }
   }

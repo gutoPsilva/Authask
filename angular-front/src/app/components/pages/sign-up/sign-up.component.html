@@ -1,49 +1,132 @@
 <section>
   <article>
     <h2>Create Your Account</h2>
-    <p class="sub-text">Ready to get started? Join us and boost your productivity with our task management app. Create an account now!</p>
+    <p class="sub-text">
+      Ready to get started? Join us and boost your productivity with our task
+      management app. Create an account now!
+    </p>
   </article>
   <form (ngSubmit)="onSubmit()" [formGroup]="signForm" #formDir="ngForm">
     <div class="form-group mb-3">
       <div>
-        <input type="text" id="username" placeholder="username" formControlName="username" required>
-        <label for="usernameInput" class="form-label" aria-placeholder="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          placeholder="username"
+          formControlName="username"
+          required
+        />
+        <label
+          for="usernameInput"
+          class="form-label"
+          aria-placeholder="username"
+          >Username</label
+        >
       </div>
-      <div class="wrong-container mt-1" *ngIf="username?.invalid && formDir.submitted">
+      <div
+        class="wrong-container mt-1"
+        *ngIf="username?.invalid && formDir.submitted"
+      >
         <p *ngIf="username?.errors?.['required']">Username is required</p>
       </div>
     </div>
     <div class="form-group mb-3">
       <div>
-        <input type="email" id="email" placeholder="email" formControlName="email" required>
-        <label for="email" class="form-label" aria-placeholder="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="email"
+          formControlName="email"
+          required
+        />
+        <label for="email" class="form-label" aria-placeholder="email"
+          >Email</label
+        >
       </div>
-      <div class="wrong-container mt-1" *ngIf="email?.invalid && formDir.submitted">
+      <div
+        class="wrong-container mt-1"
+        *ngIf="email?.invalid && formDir.submitted"
+      >
         <p *ngIf="email?.errors?.['required']">Email is required</p>
-        <p *ngIf="email?.errors?.['email']">Please enter a valid email</p> <!-- Já limita o tamanho do input para 254 caracteres -->
+        <p *ngIf="email?.errors?.['email']">Please enter a valid email</p>
+        <!-- Já limita o tamanho do input para 254 caracteres -->
       </div>
     </div>
     <div class="form-group mb-3">
       <div>
-        <input appDisableCopyPaste class="password" formControlName="password" type="{{showPassword? 'text' : 'password'}}" id="password" placeholder="password" required title="U can't copy/paste this input >:[">
-        <label for="password" class="form-label" aria-placeholder="password">Password</label>
-        <fa-icon [icon]="showPassword ? eyeSlash : eye" tabindex="0" (keydown)="togglePassword('password', $event)" (click)="togglePassword('password')"></fa-icon>
+        <input
+          appDisableCopyPaste
+          class="password"
+          formControlName="password"
+          type="{{ showPassword ? 'text' : 'password' }}"
+          id="password"
+          placeholder="password"
+          required
+          title="U can't copy/paste this input >:["
+        />
+        <label for="password" class="form-label" aria-placeholder="password"
+          >Password</label
+        >
+        <fa-icon
+          [icon]="showPassword ? eyeSlash : eye"
+          tabindex="0"
+          (keydown)="togglePassword('password', $event)"
+          (click)="togglePassword('password')"
+        ></fa-icon>
       </div>
-      <div class="wrong-container mt-1" *ngIf="password?.invalid && formDir.submitted">
+      <div
+        class="wrong-container mt-1"
+        *ngIf="password?.invalid && formDir.submitted"
+      >
         <p *ngIf="password?.errors?.['required']">Password is required</p>
         <p *ngIf="password?.errors?.['minlength']">Minimum length is 8</p>
-        <p *ngIf="password?.errors?.['pattern'] && !password?.errors?.['minlength']">Password must contain 1 lowercase, 1 uppercase, 1 special character and 1 number</p> <!-- Exibir mensagem de erro que está fora do padrão somente se não atender ao pattern fornecido E se o minLength já ter sido respeitado, não quero exibir as 2 mensagens simultaneamente -->
+        <p
+          *ngIf="password?.errors?.['pattern'] && !password?.errors?.['minlength']"
+        >
+          Password must contain at least 1 uppercase, 1 lowercase, 1 number and
+          1 special character (e.g. !&#64;$%^&*_?.)
+        </p>
+        <!-- Exibir mensagem de erro que está fora do padrão somente se não atender ao pattern fornecido E se o minLength já ter sido respeitado, não quero exibir as 2 mensagens simultaneamente -->
       </div>
     </div>
     <div class="form-group mb-3">
       <div>
-        <input appDisableCopyPaste class="password" formControlName="confirmPassword" type="{{showCpassword ? 'text' : 'password'}}" id="confirmPassword" placeholder="Confirm Password" required title="U can't copy/paste this input >:(">
-        <label for="confirmPassword" class="form-label" aria-placeholder="Confirm Password">Confirm Password</label>
-        <fa-icon [icon]="showCpassword ? eyeSlash : eye" tabindex="0" (keydown)="togglePassword('cpassword', $event)" (click)="togglePassword('cpassword')"></fa-icon>
+        <input
+          appDisableCopyPaste
+          class="password"
+          formControlName="confirmPassword"
+          type="{{ showCpassword ? 'text' : 'password' }}"
+          id="confirmPassword"
+          placeholder="Confirm Password"
+          required
+          title="U can't copy/paste this input >:("
+        />
+        <label
+          for="confirmPassword"
+          class="form-label"
+          aria-placeholder="Confirm Password"
+          >Confirm Password</label
+        >
+        <fa-icon
+          [icon]="showCpassword ? eyeSlash : eye"
+          tabindex="0"
+          (keydown)="togglePassword('cpassword', $event)"
+          (click)="togglePassword('cpassword')"
+        ></fa-icon>
       </div>
-      <div class="wrong-container mt-1" *ngIf="(confirmPassword?.invalid || unmatchingPasswords) && formDir.submitted">
-        <p *ngIf="confirmPassword?.errors?.['required']">Confirm Password is required</p>
-        <p *ngIf="unmatchingPasswords && confirmPassword?.value">Incorrect confirmation password</p> <!-- Mostrar que a senha está incorreta somente se houver realmente algum input, senão houver input exiba somente o required acima, caso haja e não tenha match, aí sim exiba a mensagem de incorrect -->
+      <div
+        class="wrong-container mt-1"
+        *ngIf="
+          (confirmPassword?.invalid || unmatchingPasswords) && formDir.submitted
+        "
+      >
+        <p *ngIf="confirmPassword?.errors?.['required']">
+          Confirm Password is required
+        </p>
+        <p *ngIf="unmatchingPasswords && confirmPassword?.value">
+          Incorrect confirmation password
+        </p>
+        <!-- Mostrar que a senha está incorreta somente se houver realmente algum input, senão houver input exiba somente o required acima, caso haja e não tenha match, aí sim exiba a mensagem de incorrect -->
       </div>
     </div>
     <button type="submit">

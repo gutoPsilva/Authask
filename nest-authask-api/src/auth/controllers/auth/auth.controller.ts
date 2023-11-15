@@ -5,14 +5,14 @@ import {
   Body,
   Get,
   Req,
+  Delete,
   HttpException,
   HttpStatus,
-  Res,
 } from '@nestjs/common';
 import { RegisterLocalUserDto } from 'src/auth/dtos/registerLocalUser.dto';
 import { UnifiedAuthGuard } from 'src/auth/utils/Guards/UnifiedGuards';
 import { UsersService } from 'src/users/services/users/users.service';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +21,7 @@ export class AuthController {
   @UseGuards(UnifiedAuthGuard)
   @Post('login')
   async loginLocal(@Req() req: Request) {
+    console.log(req.user);
     return req.user;
   }
 
@@ -38,23 +39,30 @@ export class AuthController {
   @UseGuards(UnifiedAuthGuard)
   @Get('discord/redirect')
   async discordRedirect(@Req() req: Request) {
-    return req.user;
+    // authorized
+    return `<script>
+    window.opener.postMessage(${JSON.stringify(
+      req.user,
+    )}, "http://localhost:4200/login");
+    window.close();
+  </script>`;
   }
 
-  @Post('logout')
-  logout(@Req() req: Request, @Res() res: Response) {
-    if (req.user) {
-      req.logout((err) => {
-        if (err) {
-          console.log(err);
-          new HttpException(
-            'Error logging out',
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
-        }
+  @Delete('logout')
+  logout(@Req() req: Request) {
+    console.log('Logging out');
+    try {
+      req.logOut((err) => {
+        if (err) throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
       });
-      return res.status(HttpStatus.OK).send('Logged out');
+      req.session.cookie.maxAge = 0; // destroy session
+      return { message: 'Logged out successfully', loggedOut: true };
+    } catch (err) {
+      console.log(err);
+      return {
+        message: 'Failed to logout',
+        loggedOut: false,
+      };
     }
-    return res.status(HttpStatus.NOT_FOUND).send('No user to log out');
   }
 }

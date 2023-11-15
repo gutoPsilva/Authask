@@ -11,7 +11,7 @@ import { DataSource } from 'typeorm';
 import { Session } from './entities/Session.entity';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const sessionRepository = app.get(DataSource).getRepository(Session);
 
   // the DTO class-validators decorators weren't working without this piece of code. dunno why

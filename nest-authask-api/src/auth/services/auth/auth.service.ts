@@ -15,10 +15,11 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<LocalUser | null> {
-    const userDB = await this.userService.findLocalUser({ username: username });
+    const userDB = await this.userService.findLocalUser({ username: username }); // if no user is found, it will return an error "Invalid credentials" since the user is null
 
     // check if user exists and compare if raw password is equal to the hashed password
     if (userDB && (await comparePassword(password, userDB.password))) {
+      console.log('logged in');
       return userDB;
     }
     return null;

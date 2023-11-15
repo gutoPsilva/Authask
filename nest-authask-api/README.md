@@ -13,7 +13,7 @@ If you want to login as a **local user**, access the endpoint `/auth/login` with
 ```json
 {
   "username": string,
-  "password": string
+  "password": string,
 }
 ```
 
@@ -25,15 +25,15 @@ If you want to login as a **Discord user**, access the endpoint `/auth/discord` 
 1. It's the first time you're using that Discord Account to authenticate.
 2. You have already authenticated with that Discord Account before.
 
-If it's the first time, the API will generate a new record in the DiscordUsers table at MySQL and login; else, it will just search for the discord user in the table and also login.
+If it's the first time, the API will generate a new record in the DiscordUsers table at MySQL and login; else, it will just search for the discord user in the table and also login. Then, it will return a JSON containing the user's info.
 
-If you want to register a new **local user**, access the endpoint `/auth/register` with POST method and provide the following object on the request:
+If you want to register a new **local user**, access the endpoint `/auth/signup` with POST method and provide the following object on the request:
 
 ```json
 {
   "username": string,
   "password": string,
-  "email": string
+  "email": string,
 }
 ```
 
@@ -52,7 +52,7 @@ There is no max length to the password since it will be hashed into a 60 charact
 
 - Password should not be empty.
 - Password min length is 8 characters.
-- The password must contain at least 1 uppercase, 1 lowercase, 1 number and 1 special character ( ONLY !@#$%^&\*-\_?. )
+- The password must contain at least 1 uppercase, 1 lowercase, 1 number and 1 special character ( ONLY !@#$%^&*_?. )
 
 ### Email
 
@@ -61,13 +61,29 @@ The email field is **unique** in the database, same as the username field.
 - Email should not be empty.
 - Email should be an email, there is a RegEx testing the string to check if it's valid.
 
-If you fulfill all these validators, the user will be created; otherwise, you will be informed about which validations are missing.
+If you fulfill all these validators, the user will be created; otherwise, you will be informed about which validations are missing. Then, it will return a JSON containing the user's info.
 
 ### **LOGOUT**
 
-To log out the authenticated user, simply access the `/auth/logout` endpoint using the POST method. Upon successful logout, the response will be 'Logged out successfully.' In the event that there is no authenticated user to log out, the response will be 'No user to logout.'
+To log out the authenticated user, simply access the `/auth/logout` endpoint using the DELETE method. Upon successful logout, the response will be:
 
-Please be aware that each session has a maximum duration of 4 hours. Every time you log in, a new session is created. Additionally, if there is another active session for the same client, it will be destroyed upon your login.
+```json
+{ 
+  message: 'Logged out successfully',
+  loggedOut: true,
+}
+```
+
+In the event that there is no authenticated user to log out, the response will be:
+
+```json
+{ 
+  message: 'Failed to logout',
+  loggedOut: false,
+}
+```
+
+Please be aware that each session has a maximum duration of 4 hours. Every time you log in, a new session is created. Additionally, if there is another active session for the same client, it will be destroyed upon your login. Also when you logout the session cookie is destroyed.
 
 ### **After authenticaion**
 
@@ -84,7 +100,7 @@ To get all the tasks from the authenticated user, access the endpoint `/tasks` w
   "urgent": boolean,
   "startsAt": Date,
   "endsAt": Date | null,
-  "createdAt": Date
+  "createdAt": Date,
 }
 ```
 
@@ -101,7 +117,7 @@ In order to create a task, access the endpoint `/tasks` with a POST method an ob
   "status": 'OPEN' | 'IN_PROGRESS | 'DONE',
   "urgent": boolean,
   "startsAt": Date | null,
-  "endsAt": Date
+  "endsAt": Date,
 }
 ```
 

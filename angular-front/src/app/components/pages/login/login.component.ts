@@ -1,6 +1,13 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { faArrowRight, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowRight,
+  faEye,
+  faEyeSlash,
+} from '@fortawesome/free-solid-svg-icons';
+import { faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';  
+import { AlertService } from 'src/app/services/alert/alert.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -8,15 +15,21 @@ import { faArrowRight, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-ico
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  showPassword: boolean = false;
+  loginError: string = '';
 
+  showPassword: boolean = false;
   loginForm!: FormGroup;
 
+  discord = faDiscord; 
+  github = faGithub;
   arrowRight = faArrowRight;
   eye = faEye;
   eyeSlash = faEyeSlash;
 
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -25,19 +38,51 @@ export class LoginComponent {
     });
   }
 
-  get username(){
+  get username() {
     return this.loginForm.get('username');
   }
 
-  get password(){
+  get password() {
     return this.loginForm.get('password');
   }
 
-  onSubmit(){
-    if(this.loginForm.valid){
-      console.log('Forms válido.')
-      return;
+  async onSubmit() {
+    if (this.loginForm.valid) {
+      this.alertService.showLoadingAlert(
+        'Logging in user, please wait a moment...'
+      );
+
+      await this.authService.login(this.loginForm.value).subscribe({
+        next: (res) => {
+          this.authService.setUser(res);
+          this.loginError = '';
+          console.log(this.authService.getUser());
+          this.alertService.showLoadingAlert('');
+        },
+        error: (err) => {
+          this.loginError = err.error.message;
+          this.alertService.showLoadingAlert('');
+        },
+      });
     }
+  }
+
+  async signinWithDiscord() {
+    this.alertService.showLoadingAlert(
+      'Please grant authorization and await login through Discord...'
+    );
+    await this.authService.signin().subscribe({
+      next: (res) => {
+        this.authService.setUser(res);
+        this.loginError = '';
+        console.log(this.authService.getUser());
+        this.alertService.showLoadingAlert('');
+      },
+      error: (err) => {
+        this.loginError = err.error.message;
+        this.alertService.showLoadingAlert('');
+      },
+    });
   }
 
   togglePassword(event?: KeyboardEvent) {

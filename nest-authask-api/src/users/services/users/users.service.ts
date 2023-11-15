@@ -21,7 +21,7 @@ export class UsersService {
   async findLocalUser(criteria: Partial<LocalUser>): Promise<LocalUser> {
     const userDB = await this.localUserRepository.findOne({ where: criteria });
     if (!userDB)
-      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
     return userDB;
   }
 

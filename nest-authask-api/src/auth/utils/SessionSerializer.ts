@@ -14,6 +14,7 @@ export class SessionSerializer extends PassportSerializer {
   }
 
   serializeUser(user: LocalUser | DiscordUser, done: DoneCallback) {
+    console.log('Serializing user');
     done(null, {
       id: user.id,
       strategy: user instanceof LocalUser ? 'local' : 'discord',
@@ -24,7 +25,9 @@ export class SessionSerializer extends PassportSerializer {
     sessionUser: { id: number; strategy: userStrategy },
     done: DoneCallback,
   ) {
+    console.log('Deserializing user');
     const { id, strategy } = sessionUser;
+    console.log(id, strategy);
 
     try {
       const user =
