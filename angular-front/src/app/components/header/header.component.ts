@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -12,7 +13,8 @@ import { DiscordUser, LocalUser } from 'src/interfaces/auth.interface';
 export class HeaderComponent {
   constructor(
     private authService: AuthService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
   ) {}
   lock = faLock;
   user: LocalUser | DiscordUser | null = null;
@@ -34,6 +36,7 @@ export class HeaderComponent {
         if (res.loggedOut) {
           this.authService.setUser(null);
           localStorage.removeItem('user'); // remove storage, since the session is now destroyed
+          this.router.navigate(['/login']);
         } else {
           this.alertService.showAlert('Error logging out.');
         }
