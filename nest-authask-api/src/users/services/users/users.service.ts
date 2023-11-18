@@ -40,16 +40,16 @@ export class UsersService {
     });
 
     // email && username are unique in the local database, so the user can't register if they are already in use
-    if (emailInUse) {
+    if (usernameInUse) {
       throw new HttpException(
-        'Email already in use locally',
+        'Username already in use locally',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    if (usernameInUse) {
+    if (emailInUse) {
       throw new HttpException(
-        'Username already in use locally',
+        'Email already in use locally',
         HttpStatus.BAD_REQUEST,
       );
     }

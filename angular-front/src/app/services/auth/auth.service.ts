@@ -15,9 +15,11 @@ import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 })
 export class AuthService {
   private apiURL: string = 'http://localhost:3000/auth/';
+
   constructor(private http: HttpClient) {
     this.loadUserFromLocalStorage();
   }
+
   private userSubject: BehaviorSubject<LocalUser | DiscordUser | null> =
     new BehaviorSubject<LocalUser | DiscordUser | null>(null);
   user = this.userSubject.asObservable();
@@ -31,7 +33,9 @@ export class AuthService {
 
   registerLocalUser(registerInfo: IRegisterLocalUser) {
     const url = this.apiURL + 'signup';
-    return this.http.post<LocalUser>(url, registerInfo).pipe(catchError(this.handleError));
+    return this.http
+      .post<LocalUser>(url, registerInfo)
+      .pipe(catchError(this.handleError));
   }
 
   signin(): Observable<DiscordUser> {
@@ -78,10 +82,13 @@ export class AuthService {
 
   logout() {
     const url = this.apiURL + 'logout';
-    return this.http.delete<UserLogoutMsg>(url).pipe(catchError(this.handleError)); 
+    return this.http
+      .delete<UserLogoutMsg>(url)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {
+    console.log(error);
     return throwError(() => error);
   }
 }

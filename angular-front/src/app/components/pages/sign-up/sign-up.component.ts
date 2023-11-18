@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { IdbUsedDetails } from 'src/interfaces/auth.interface';
 
 @Component({
   selector: 'app-sign-up',
@@ -27,6 +28,8 @@ export class SignUpComponent {
   eye = faEye;
   eyeSlash = faEyeSlash;
 
+  dbUsed: IdbUsedDetails = { email: '', username: '' };
+
   constructor(
     private authService: AuthService,
     private alertService: AlertService,
@@ -41,8 +44,7 @@ export class SignUpComponent {
       ]),
       email: new FormControl('', [
         Validators.required,
-        Validators.email,
-        Validators.maxLength(255),
+        Validators.email, // already limits the email to be 254 characters
       ]),
       password: new FormControl('', [
         Validators.required,
@@ -80,18 +82,30 @@ export class SignUpComponent {
       this.alertService.showLoadingAlert(
         'Creating user, please wait a moment...'
       );
-      
-      await this.authService
-        .registerLocalUser(registerInfo)
-        .subscribe((res) => {
+      this.dbUsed = { email: '', username: '' }; // reset dbUsedDetails
+
+      await this.authService.registerLocalUser(registerInfo).subscribe({
+        next: (res) => {
           console.log(res);
-          this.alertService.showLoadingAlert(''); // removes the loading & shows the success
           this.alertService.showAlert(
             // selfClosingAlert in 5secs
             'Account created successfully! Now you can login.'
           );
           this.router.navigate(['/login']);
-        });
+        },
+        error: (err) => {
+          this.alertService.showAlert("Couldn't create account, bad request.");
+
+          // only these 2 cases are returned by the API
+          if (err.error.message.includes('Email'))
+            this.dbUsed.email = err.error.message;
+          else this.dbUsed.username = err.error.message;
+
+          console.log(err.error.message);
+        },
+      });
+
+      this.alertService.showLoadingAlert(''); // response retrieved, not loading anymore, but maybe an alert error
     }
   }
 

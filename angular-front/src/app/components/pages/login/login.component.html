@@ -63,7 +63,7 @@
       </div>
     </div>
     <div class="button-container">
-      <button class="forgot-btn">Forgot Password?</button>
+      <button type="button" class="forgot-btn">Forgot Password?</button> <!-- If i didn't specify the type='button' it would act like a submit :/ -->
       <button type="submit" class="login-btn">
         <span>Login</span>
         <fa-icon [icon]="arrowRight"></fa-icon>
@@ -82,14 +82,6 @@
       [icon]="discord"
       size="1x"
       title="Discord"
-      tabindex="0"
-    ></fa-icon>
-    or
-    <fa-icon
-      class="brand"
-      [icon]="github"
-      size="lg"
-      title="GitHub"
       tabindex="0"
     ></fa-icon>
   </p>

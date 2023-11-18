@@ -41,9 +41,8 @@ Keep in mind that when registering, there are some validations you must follow i
 
 ### Username
 
-The username field is **unique** in the database and since MySQL is case-insensitive, you can't register a new username 'gutopsilva' if the database already has a user named 'GutoPSilva' or its variants. **The same applies to EMAIL!**
-
 - Username should not be empty.
+- Username is **unique** for each account.
 - Username max length is 255 characters.
 
 ### Password
@@ -56,9 +55,8 @@ There is no max length to the password since it will be hashed into a 60 charact
 
 ### Email
 
-The email field is **unique** in the database, same as the username field.
-
 - Email should not be empty.
+- Email is **unique** for each account.
 - Email should be an email, there is a RegEx testing the string to check if it's valid.
 
 If you fulfill all these validators, the user will be created; otherwise, you will be informed about which validations are missing. Then, it will return a JSON containing the user's info.
@@ -210,6 +208,9 @@ I used dotenv to setup the environment variables. Create a '.env' file in the ro
 - DB_USER
 - DB_PASS
 - DB_NAME
+- CLIENT_ORIGIN_URL
+
+CLIENT_ORIGIN_URL is the base origin of the client, in my case i'm using angular so it's ``http://localhost:4200``.
 
 Since SESSION_SECRET is crucial for security, you can generate the secret with the following built-in Node.js function:
 
@@ -226,14 +227,20 @@ As you may have noticed, there are some environment variables related to Discord
 Go to discord.com/developers, create an application, and set up the CLIENT_ID, CLIENT_SECRET, and REDIRECT_URI. This part is simple, but **PAY ATTENTION** to the REDIRECT_URI. In my Discord application, i specified in the auth.controller that the endpoint would be `auth/discord/redirect`, as shown in the following code:
 
 ```js
-@UseGuards(DiscordAuthGuard)
+@UseGuards(UnifiedAuthGuard)
 @Get('discord/redirect')
-async discordRedirect() {
-  return HttpStatus.OK;
+async discordRedirect(@Req() req: Request) {
+  // authorized
+  return `
+  <script>
+    window.opener.postMessage(${JSON.stringify(req.user)}, 
+    "${process.env.CLIENT_ORIGIN_URL}/login");
+    window.close();
+  </script>`;
 }
 ```
 
-If you set it to a different endpoint, you must change the `@Get('discord/redirect')` to match the redirect you specified in your application.
+If you set it to a different endpoint, you must change the `@Get('discord/redirect')` to match the redirect you specified in your application and also update the script URL to where you initialized the login with discord process.
 
 ### 5 - Run the API
 
@@ -249,5 +256,9 @@ If you've followed all the steps correctly, simply execute the command `npm run 
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [Discord for Developers](https://discord.com/developers)
 - [GitHub Copilot](https://github.com/features/copilot)
+
+## Difficulties
+
+I had some problem with the passport-discord strategy, since i didn't find out how i could handle errors when the user doesn't authorize the discord application to access it's information, it just stays at `auth/discord/redirect` with a {"message":"Unauthorized","statusCode":401}. But when authorized, the client gets the discord user info. I even asked for help on stackoverflow, but untill the day of this commit i still didn't get an answer.
 
 MIT License - Copyright (c) 2023, gutoPsilva.

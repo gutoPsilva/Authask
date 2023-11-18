@@ -28,6 +28,12 @@
         *ngIf="username?.invalid && formDir.submitted"
       >
         <p *ngIf="username?.errors?.['required']">Username is required</p>
+        <p *ngIf="username?.errors?.['maxlength']">
+          Username max length is 255 characters
+        </p>
+      </div>
+      <div class="wrong-container mt-1" *ngIf="formDir.submitted && dbUsed.username">
+        <p>Error on register: {{ dbUsed.username }}</p>
       </div>
     </div>
     <div class="form-group mb-3">
@@ -50,6 +56,9 @@
         <p *ngIf="email?.errors?.['required']">Email is required</p>
         <p *ngIf="email?.errors?.['email']">Please enter a valid email</p>
         <!-- Já limita o tamanho do input para 254 caracteres -->
+      </div>
+      <div class="wrong-container mt-1" *ngIf="formDir.submitted && dbUsed.email">
+        <p>Error on register: {{ dbUsed.email }}</p>
       </div>
     </div>
     <div class="form-group mb-3">

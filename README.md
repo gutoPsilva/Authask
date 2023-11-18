@@ -2,7 +2,7 @@
 
 This is an Authentication web application with a task managment for each user. ```It is currently under development```.
 
-To use the app, users must first create an account and log in. Once logged in, they can create, view, update, and delete their own task lists from a local database.
+To use the app, users must first create an account and log in, OR, sign in with Discord. Once authenticated, they can create, view, update, and delete their own task lists from a local SQL database.
 
 ## Main Frameworks, Database & Tools
 
@@ -14,7 +14,7 @@ To use the app, users must first create an account and log in. Once logged in, t
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white)
 
-**ANGULAR**: Untill now i've tried only React and Angular for F-end frameworks, but angular is absolutely my favorite.
+**ANGULAR**: Untill now i've tried only React and Angular for front-end frameworks, but angular is absolutely my favorite.
 
 **NestJS**: This is my first project with NestJS, the structured way of building things inspired by Angular is absolutely impecable.
 

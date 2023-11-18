@@ -7,7 +7,7 @@
     (closed)="alertMessage = ''"
     >{{ alertMessage }}
   </ngb-alert>
-  <ngb-alert class="loading-alert" *ngIf="loadingMessage" [dismissible]="false">
+  <ngb-alert #loadingAlert class="loading-alert" *ngIf="loadingMessage" [dismissible]="false">
     {{ loadingMessage }}
     <fa-icon [icon]="loadingIcon" [spin]="true"></fa-icon>
   </ngb-alert>

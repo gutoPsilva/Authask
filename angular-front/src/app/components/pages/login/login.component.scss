@@ -128,7 +128,15 @@ form {
 
 .button-container {
   display: flex;
+  flex-direction: column-reverse;
   gap: 1rem;
+
+  @media (min-width: 420px) {
+    flex-direction: row;
+    .forgot-btn {
+      max-width: fit-content;
+    }
+  }
 
   button {
     display: flex;
@@ -195,7 +203,7 @@ form {
 }
 
 .forgot-btn {
-  max-width: fit-content;
+  width: 100%;
 
   &::after,
   &::before {

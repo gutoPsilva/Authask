@@ -11,8 +11,15 @@ import { DataSource } from 'typeorm';
 import { Session } from './entities/Session.entity';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
   const sessionRepository = app.get(DataSource).getRepository(Session);
+
+  // THIS MUST LOAD FIRST so any other middlewares bellow this doesn't send a response BEFORE the CORS policy is set
+  // i need to use so the CLIENT-SIDE can send the req.user object as credentials in the protected endpoints, and the CORS policy won't block it because the exact origin (the CLIENT) is SPECIFIED on environment variables
+  app.enableCors({
+    origin: process.env.CLIENT_ORIGIN_URL,
+    credentials: true,
+  });
 
   // the DTO class-validators decorators weren't working without this piece of code. dunno why
   app.useGlobalPipes(

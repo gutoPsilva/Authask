@@ -40,12 +40,12 @@ export class AuthController {
   @Get('discord/redirect')
   async discordRedirect(@Req() req: Request) {
     // authorized
-    return `<script>
-    window.opener.postMessage(${JSON.stringify(
-      req.user,
-    )}, "http://localhost:4200/login");
-    window.close();
-  </script>`;
+    return `
+    <script>
+      window.opener.postMessage(${JSON.stringify(req.user)}, 
+      "${process.env.CLIENT_ORIGIN_URL}/login");
+      window.close();
+    </script>`;
   }
 
   @Delete('logout')

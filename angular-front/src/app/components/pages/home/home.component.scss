@@ -1,0 +1,47 @@
+@import "../../../../variables.scss";
+
+section {
+  width: 100%;
+}
+
+.welcome-container {
+  display: flex;
+  gap: 1em;
+
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+
+  h2 {
+    color: $gray;
+
+    span {
+      word-break: break-all;
+      color: $mint;
+    }
+  }
+
+  @media (min-width: 640px) {
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    h2 {
+      font-size: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    h2 {
+      font-size: 3rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    h2 {
+      font-size: 3.5rem;
+    }
+  }
+}

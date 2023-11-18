@@ -5,9 +5,10 @@ import {
   faEye,
   faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
-import { faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';  
+import { faDiscord } from '@fortawesome/free-brands-svg-icons';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -20,15 +21,15 @@ export class LoginComponent {
   showPassword: boolean = false;
   loginForm!: FormGroup;
 
-  discord = faDiscord; 
-  github = faGithub;
+  discord = faDiscord;
   arrowRight = faArrowRight;
   eye = faEye;
   eyeSlash = faEyeSlash;
 
   constructor(
     private authService: AuthService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -51,13 +52,14 @@ export class LoginComponent {
       this.alertService.showLoadingAlert(
         'Logging in user, please wait a moment...'
       );
+      this.loginError = ''; // always reset the error when submitted, so the user can notice he made a mistake again
 
       await this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
           this.authService.setUser(res);
-          this.loginError = '';
           console.log(this.authService.getUser());
           this.alertService.showLoadingAlert('');
+          this.router.navigate(['/home']);
         },
         error: (err) => {
           this.loginError = err.error.message;
@@ -77,6 +79,7 @@ export class LoginComponent {
         this.loginError = '';
         console.log(this.authService.getUser());
         this.alertService.showLoadingAlert('');
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         this.loginError = err.error.message;

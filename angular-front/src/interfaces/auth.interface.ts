@@ -12,6 +12,11 @@ export interface IRegisterLocalUser {
   email: string;
 }
 
+export interface IdbUsedDetails {
+  username: string;
+  email: string;
+}
+
 export interface LocalUser {
   id: number;
   username: string;

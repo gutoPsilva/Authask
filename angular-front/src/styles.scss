@@ -3,9 +3,9 @@
 
 // ngbAlert close button variables
 $btn-close-color: white;
-$btn-close-opacity: .75;
+$btn-close-opacity: 0.75;
 $btn-close-hover-opacity: 1;
-$btn-close-disabled-opacity: .75;
+$btn-close-disabled-opacity: 0.75;
 
 @import "bootstrap/scss/bootstrap";
 
@@ -60,19 +60,15 @@ h1 {
 
 body {
   -webkit-font-smoothing: antialiased;
-  display: grid; // make the app-root fill the min 100svh
-  grid-template-rows: 1fr; // only app-root is direct body children
-  min-height: 100svh;
-  padding: 0.75rem 2rem;
   background-color: $night;
+  display: grid;
+  min-height: 100svh;
 
   app-root {
     display: flex;
     flex-direction: column;
-
-    footer {
-      margin-top: auto;
-    }
+    padding: 0.75rem 2rem;
+    justify-content: space-between;
   }
 }
 
@@ -107,7 +103,11 @@ a {
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, rgba($color: $mint, $alpha: 0.85), rgba($color: $jasmine, $alpha: 0.85));
+  background: linear-gradient(
+    to bottom,
+    rgba($color: $mint, $alpha: 0.85),
+    rgba($color: $jasmine, $alpha: 0.85)
+  );
 }
 
 // fontawesome spin-animation

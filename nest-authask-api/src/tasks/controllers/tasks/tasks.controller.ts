@@ -25,6 +25,7 @@ export class TasksController {
   @UseGuards(AuthenticatedGuard)
   @Get()
   async getUserTasks(@Req() req: Request) {
+    console.log('getting tasks');
     return await this.tasksService.allUserTasks(
       req.user as LocalUser | DiscordUser,
     );
