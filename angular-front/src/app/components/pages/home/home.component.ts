@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { AuthenticatedUser } from 'src/interfaces/auth.interface';
 
@@ -8,28 +9,26 @@ import { AuthenticatedUser } from 'src/interfaces/auth.interface';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  user: AuthenticatedUser | null = {
-    discordId: '',
-    email: '',
-    password: '',
-    id: 0,
-    username:
-      '',
-  };
-  fetchingUser: boolean = true;
+  user: AuthenticatedUser | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    // this.authService.getUser().subscribe({
-    //   next: user => {
-    //     this.user = user;
-    //     this.fetchingUser = false;
-    //   },
-    //   error: err => {
-    //     console.log(err);
-    //     this.fetchingUser = false;
-    //   }
-    // });
+    this.authService.getUser().subscribe({
+      next: (user) => {
+        this.user = user;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  loginRedirect() {
+    this.router.navigate(['/login']);
+  }
+
+  manageTasksRedirect() {
+    this.router.navigate(['/task-list']);
   }
 }

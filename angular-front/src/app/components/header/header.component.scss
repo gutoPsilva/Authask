@@ -4,15 +4,77 @@ header {
   display: flex;
   gap: 1rem;
   color: $whiteSmoke;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
-nav {
+.desk-nav {
   width: 100%;
+  display: none;
+
+  @media (min-width: 640px) {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+
+ul {
   display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
+  gap: 1.25em;
+  font-size: 1.25rem;
+  padding: 0;
+  margin: 0;
+
+  li {
+    position: relative;
+
+    a {
+      transition: color 250ms ease-in-out;
+
+      &:after {
+        // underline animated
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: $mint;
+        bottom: -4px;
+        left: 0;
+        transform: scaleX(0);
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-in-out;
+      }
+
+      &:hover:after,
+      &:focus:after {
+        transform-origin: bottom left;
+        transform: scaleX(1);
+      }
+
+      &:hover,
+      &:focus {
+        color: $mint;
+      }
+    }
+  }
+
+  .logout-btn {
+    background-color: transparent;
+    border: none;
+    color: $whiteSmoke;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 350ms ease-in-out;
+    outline: none;
+
+    &:hover,
+    &:focus {
+      color: $mint;
+    }
+  }
 }
 
 a {
@@ -66,67 +128,111 @@ a {
   }
 }
 
-ul {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.25em;
-  font-size: 1.25rem;
-  padding: 0;
-  margin: 0;
-
-  li {
-    a {
-      position: relative;
-      text-decoration: none;
-      transition: color 250ms ease-in-out;
-
-      &:after {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 2px;
-        background-color: $mint;
-        bottom: -4px;
-        left: 0;
-        transform: scaleX(0);
-        transform-origin: bottom right;
-        transition: transform 0.25s ease-in-out;
-      }
-
-      &:hover:after,
-      &:focus:after {
-        transform-origin: bottom left;
-        transform: scaleX(1);
-      }
-    }
-
-    &:hover a,
-    a:focus {
-      color: $mint;
-    }
-  }
-
-  .logout-btn {
-    background-color: transparent;
-    border: none;
-    color: $whiteSmoke;
-    font-size: 1.25rem;
-    cursor: pointer;
-    transition: color 350ms ease-in-out;
-    outline: none;
-
-    &:hover,
-    &:focus {
-      color: $mint;
-    }
-  }
-}
-
 section {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.btn-menu {
+  display: flex;
+  background: transparent;
+  flex-direction: column;
+  justify-content: space-between;
+
+  border: none;
+  outline: none;
+  height: 18px;
+  width: 18px;
+  z-index: 9999999;
+  margin: auto 0 auto auto; // only m-right is 0
+
+  .bar {
+    height: 2px;
+    width: 100%;
+    background-color: $whiteSmoke;
+    transition: all 0.25s ease-in-out;
+  }
+
+  .bar-1 {
+    width: 23.425px; // for some reason the rotation was changing the bar width, this turns into 21.99px
+    transform: rotate(45deg);
+    transform-origin: top left;
+  }
+
+  .bar-2 {
+    width: 0;
+    transform-origin: center left;
+  }
+
+  .bar-3 {
+    width: 23.425px; // for some reason the rotation was changing the bar width, this turns into 21.99px
+    transform: rotate(-45deg);
+    transform-origin: bottom left;
+  }
+
+  &:hover,
+  &:focus {
+    .bar {
+      background-color: $mint;
+    }
+  }
+
+  @media (min-width: 640px) {
+    display: none;
+  }
+}
+
+.cover-screen {
+  pointer-events: none; // the background-elements CAN be clicked
+  opacity: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: rgba(0, 0, 0, 0.637);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  transition: opacity 0.25s ease-in-out;
+
+  @media (min-width: 640px) {
+    display: none;
+  }
+}
+
+.show-cover-screen {
+  opacity: 1;
+  pointer-events: all; // the background-elements CANNOT be clicked
+}
+
+.mobile-nav {
+  position: fixed;
+  z-index: 999999;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  min-width: 30%;
+  transform: translateX(100%);
+  padding: 3.5rem 2rem;
+  background-color: $night;
+
+  transition: all 0.25s ease-in-out;
+
+  ul {
+    gap: 0.5em;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  @media (min-width: 640px) {
+    display: none;
+  }
+}
+
+.show-mobile-nav {
+  transform: translateX(0%);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.637);
 }
 
 .active-link {

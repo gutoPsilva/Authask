@@ -34,7 +34,7 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 1000 * 60 * 60 * 4, // a logged session will last 4 hours
+        maxAge: 1000 * 60 * 60 * 4, // a logged session can last 4 hours
       },
       store: new TypeormStore().connect(sessionRepository),
     }),

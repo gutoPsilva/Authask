@@ -7,6 +7,25 @@ $btn-close-opacity: 0.75;
 $btn-close-hover-opacity: 1;
 $btn-close-disabled-opacity: 0.75;
 
+// ngbAccordion variables
+$accordion-bg: $night;
+$accordion-color: $whiteSmoke;
+$accordion-button-color: $whiteSmoke;
+
+$accordion-button-active-bg: $night;
+$accordion-button-active-color: $whiteSmoke;
+
+$accordion-border-color: $mint;
+
+$accordion-button-focus-box-shadow: 0px 0px 10px 1px
+  rgba(
+    $color: $mint,
+    $alpha: 0.75,
+  );
+
+$accordion-button-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$whiteSmoke}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+$accordion-button-active-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$jasmine}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+
 @import "bootstrap/scss/bootstrap";
 
 *,
@@ -68,7 +87,6 @@ body {
     display: flex;
     flex-direction: column;
     padding: 0.75rem 2rem;
-    justify-content: space-between;
   }
 }
 
@@ -108,6 +126,16 @@ a {
     rgba($color: $mint, $alpha: 0.85),
     rgba($color: $jasmine, $alpha: 0.85)
   );
+}
+
+// input:search style the X
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+input[type="search"]:focus::-webkit-search-cancel-button {
+  opacity: .3;
+  pointer-events: all;
 }
 
 // fontawesome spin-animation

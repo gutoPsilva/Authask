@@ -46,7 +46,7 @@ export class LoggedOutPermissionsService {
     if (!this.user) return true;
     else {
       this.alertService.showAlert('Cannot access that page while logged in.');
-      this.router.navigate(['/task-list']);
+      this.router.navigate(['/home']);
       return false;
     }
   }

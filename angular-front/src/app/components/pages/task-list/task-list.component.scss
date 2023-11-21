@@ -1,0 +1,229 @@
+@import "../../../../variables.scss";
+
+.top-container {
+  display: flex;
+  gap: 1.5rem;
+  flex-direction: column-reverse;
+
+  @media (min-width: 1024px) {
+    gap: 2rem;
+    flex-direction: row;
+  }
+
+  .dropdown {
+    width: fit-content;
+    position: relative;
+    color: $whiteSmoke;
+
+    fa-icon {
+      color: $whiteSmoke;
+      transition: all 0.25s ease-in-out;
+    }
+
+    .select {
+      display: flex;
+      align-items: center;
+      gap: 2.5em;
+      cursor: pointer;
+      border: 1px solid $jasmine-dark;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem calc(1.2rem - 2px);
+      transition: all 0.35s ease-in-out;
+      outline: none;
+      background: rgba($color: #000000, $alpha: 0.1);
+
+      &:hover,
+      &:focus {
+        border-color: $jasmine;
+
+        fa-icon {
+          transform: rotate(90deg);
+        }
+      }
+    }
+
+    .menu {
+      position: absolute;
+      margin-top: .25em;
+      width: 100%;
+      padding: 0.2em 0.5em;
+      background: rgba($color: #000000, $alpha: 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: 1px solid $jasmine;
+      border-radius: 0px 0px 6px 6px;
+      z-index: 10;
+      transition: 0.2s;
+
+      @media (min-width: 1024px) {
+        justify-self: flex-start;
+      }
+
+      li {
+        cursor: pointer;
+        padding: 0.7em 0.5em;
+        transition: all 0.25s ease-in-out;
+        outline: none;
+
+        &:hover,
+        &:focus {
+          color: $mint;
+        }
+      }
+    }
+  }
+}
+
+.tasks-container {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 640px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media (min-width: 1536px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  max-width: 600px;
+  width: 100%;
+
+  input {
+    flex: 1;
+    outline: none;
+    border: 1px solid transparent;
+    padding: 0.6rem 1.2rem;
+    border-bottom-color: $mint;
+    background: transparent;
+    color: $whiteSmoke;
+
+    &::placeholder {
+      color: rgba($color: $gray, $alpha: 0.75);
+    }
+  }
+}
+
+.btn-create-task {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 0.6em 1.2em;
+  width: fit-content;
+
+  background: rgba($color: $night, $alpha: 1);
+  color: $whiteSmoke;
+  outline: none;
+
+  font-weight: bold;
+  transition: all 0.35s ease-in-out;
+  border: 1px solid;
+  border-image-source: linear-gradient(to left, $mint, $jasmine);
+  border-image-slice: 1;
+
+  @media (min-width: 1024px){
+    margin-left: auto;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 20px;
+    z-index: -1;
+    background: linear-gradient(to left, $mint, $jasmine);
+    transition: inset 0.35s ease-in-out;
+    filter: blur(10px);
+  }
+
+  fa-icon {
+    transition: transform 0.5s ease-in-out;
+    margin-top: -4px;
+  }
+
+  &:hover,
+  &:focus {
+    &::after {
+      inset: 0px;
+    }
+
+    fa-icon {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.task {
+  overflow: wrap;
+  word-break: break-all;
+
+  button {
+    font-weight: 400;
+
+    .title {
+      margin-right: 0.5rem;
+    }
+
+    .dot {
+      margin-left: auto;
+      margin-right: 0.5rem;
+      border: 1px solid $jasmine;
+      border-radius: 99999px;
+      aspect-ratio: 1;
+      height: 0.9rem;
+      width: 0.9rem;
+      transform: scale(1);
+    }
+
+    .urgent {
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba($color: $jasmine, $alpha: 0.5);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.select-clicked {
+  border-color: $jasmine !important;
+  border-radius: 6px 6px 0px 0px !important;
+
+  fa-icon {
+    transform: rotate(180deg) !important;
+  }
+}
+
+.msg-tasks{
+  display: flex;
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-top: 2em;
+  color: $whiteSmoke;
+  gap: 2em;
+}

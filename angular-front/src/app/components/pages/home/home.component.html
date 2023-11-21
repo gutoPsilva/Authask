@@ -1,7 +1,13 @@
 <section>
   <article class="welcome-container">
     <h2>
-      Welcome, <span>{{ user?.username || "nakerushw" }}</span>
+      Welcome, <span>{{ user?.username || "anonymous" }}</span>
     </h2>
   </article>
+  <button
+    class="btn-manage"
+    (click)="user ? manageTasksRedirect() : loginRedirect()"
+  >
+    {{ user ? "Manage Tasks" : "Login Now" }}
+  </button>
 </section>

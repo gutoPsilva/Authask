@@ -22,12 +22,14 @@ export class AuthService {
 
   private userSubject: BehaviorSubject<LocalUser | DiscordUser | null> =
     new BehaviorSubject<LocalUser | DiscordUser | null>(null);
+
   user = this.userSubject.asObservable();
 
   login(user: IUserLogin): Observable<LocalUser> {
     const url = this.apiURL + 'login';
+    console.log(url, user);
     return this.http
-      .post<LocalUser>(url, user)
+      .post<LocalUser>(url, user, { withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 
@@ -71,7 +73,7 @@ export class AuthService {
   setUser(user: AuthenticatedUser | null) {
     this.userSubject.next(user);
     if (user) {
-      const expirationDate = new Date().getTime() + 1000 * 60 * 60 * 4; // after setting the user, 4 hours later the cookie and the localStorage must be destroyed
+      const expirationDate = new Date().getTime() + (1000 * 60 * 60 * 4); // after setting the user, 4 hours later the cookie and the localStorage must be destroyed
       localStorage.setItem('user', JSON.stringify({ user, expirationDate }));
     } else localStorage.removeItem('user');
   }
@@ -83,7 +85,7 @@ export class AuthService {
   logout() {
     const url = this.apiURL + 'logout';
     return this.http
-      .delete<UserLogoutMsg>(url)
+      .delete<UserLogoutMsg>(url, { withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 

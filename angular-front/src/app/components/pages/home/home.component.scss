@@ -1,19 +1,19 @@
 @import "../../../../variables.scss";
 
 section {
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
 .welcome-container {
   display: flex;
   gap: 1em;
-
-  justify-content: center;
-  font-size: 1.5rem;
   font-weight: 500;
 
   h2 {
-    color: $gray;
+    font-size: 1.75rem;
+    color: $whiteSmoke;
 
     span {
       word-break: break-all;
@@ -29,7 +29,7 @@ section {
 
   @media (min-width: 768px) {
     h2 {
-      font-size: 2.5rem;
+      font-size: 2.25rem;
     }
   }
 
@@ -43,5 +43,39 @@ section {
     h2 {
       font-size: 3.5rem;
     }
+  }
+}
+
+.btn-manage {
+  max-width: fit-content;
+  position: relative;
+  padding: 0.35em 1em;
+  border-radius: 0.25em;
+  background-color: $mint;
+  border: none;
+  box-shadow: 0 6px 0 $mint-dark;
+  font-size: 1rem;
+  color: $whiteSmoke;
+  outline: none;
+
+  transition: all 0.2s ease-in-out;
+
+  &:hover,
+  &:focus {
+    background-color: $jasmine;
+    box-shadow: 0 6px 0 $jasmine-dark;
+  }
+
+  &:active {
+    transform: translateY(6px);
+    box-shadow: none;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 1.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 1.5rem;
   }
 }

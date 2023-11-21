@@ -1,14 +1,99 @@
 <section>
-  <div class="filters">
-    
-  </div>
+  <article class="top-container">
+    <div class="search-bar-container">
+      <input type="search" placeholder="Search Tasks" />
+    </div>
+    <div class="dropdown">
+      <div
+        [ngClass]="sortByMenu ? 'select-clicked' : ''"
+        (click)="toggleSortMenu()"
+        (keydown.enter)="toggleSortMenu()"
+        class="select"
+        tabindex="0"
+        title="Sort By"
+      >
+        <div class="selected">{{ sortBySelected }}</div>
+        <fa-icon [icon]="faCaretUp"></fa-icon>
+      </div>
+      <ul *ngIf="sortByMenu" class="menu">
+        <li
+          tabindex="0"
+          (keydown.enter)="sortBy('Recently Added')"
+          (click)="sortBy('Recently Added')"
+        >
+          Recently Added
+        </li>
+        <li
+          tabindex="0"
+          (keydown.enter)="sortBy('Start Date')"
+          (click)="sortBy('Start Date')"
+        >
+          Start Date
+        </li>
+        <li
+          tabindex="0"
+          (keydown.enter)="sortBy('End Date')"
+          (click)="sortBy('End Date')"
+        >
+          End Date
+        </li>
+        <li
+          tabindex="0"
+          (keydown.enter)="sortBy('Urgent')"
+          (click)="sortBy('Urgent')"
+        >
+          Urgent
+        </li>
+      </ul>
+    </div>
+    <button class="btn-create-task" (click)="createTask()">
+      <span>Create Task</span><fa-icon [icon]="addIcon"></fa-icon>
+    </button>
+  </article>
+  <p *ngIf="fetchingTasks" class="msg-tasks">
+    Fetching your tasks...
+    <fa-icon [icon]="loadingIcon" [spin]="true"></fa-icon>
+  </p>
+  <p *ngIf="!fetchingTasks && taskList.length === 0" class="msg-tasks">
+    You don't have any tasks, why don't you create one?
+  </p>
 </section>
 
 <!-- 
 <div *ngIf="fetchingTasks" class="fetching-msg">
-  IM FETCHING TASKS NIGGA
+  fetching data...
 </div>
 <div *ngFor="let task of taskList">
   {{ task.title }}
 </div> 
+
+// tasks
+<article class="tasks-container">
+    <div class="task" ngbAccordion *ngFor="let task of taskList">
+      <div ngbAccordionItem [collapsed]="true">
+        <h2 ngbAccordionHeader>
+          <button ngbAccordionButton>
+            <span class="title"
+              >{{
+                task.title
+              }}AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span
+            >
+            <span
+              class="dot"
+              [ngClass]="task.urgent ? 'urgent' : ''"
+              title="Urgency"
+            ></span>
+          </button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <ng-template>
+              <p>Details - {{ task.description }}</p>
+              <p>Task Created at - {{ task.createdAt }}</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
 -->

@@ -10,7 +10,10 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { RegisterLocalUserDto } from 'src/auth/dtos/registerLocalUser.dto';
-import { UnifiedAuthGuard } from 'src/auth/utils/Guards/UnifiedGuards';
+import {
+  AuthenticatedGuard,
+  UnifiedAuthGuard,
+} from 'src/auth/utils/Guards/UnifiedGuards';
 import { UsersService } from 'src/users/services/users/users.service';
 import { Request } from 'express';
 
@@ -48,6 +51,7 @@ export class AuthController {
     </script>`;
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Delete('logout')
   logout(@Req() req: Request) {
     console.log('Logging out');
@@ -55,7 +59,7 @@ export class AuthController {
       req.logOut((err) => {
         if (err) throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
       });
-      req.session.cookie.maxAge = 0; // destroy session
+
       return { message: 'Logged out successfully', loggedOut: true };
     } catch (err) {
       console.log(err);

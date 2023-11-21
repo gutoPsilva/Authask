@@ -1,7 +1,10 @@
 @import "../variables.scss";
 
-// bootstrap alert component
+main {
+  height: 100%;
+}
 
+// bootstrap alert component
 ngb-alert {
   position: fixed; // even if window is scrolled, the alert still stays in the same place
   top: 3rem;
@@ -11,7 +14,7 @@ ngb-alert {
   margin: 0 auto;
   z-index: 9999;
   background: rgba($color: #000000, $alpha: 0.25);
-  color: white;
+  color: #FFFFFF;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid $mint;

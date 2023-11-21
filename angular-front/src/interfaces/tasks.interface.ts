@@ -1,4 +1,5 @@
 type TaskStatus = 'OPEN' | 'IN_PROGRESS' | 'DONE';
+export type sortBy = 'Recently Added' | 'Start Date' | 'End Date' | 'Urgent';
 
 export interface ITask {
   id: number;
