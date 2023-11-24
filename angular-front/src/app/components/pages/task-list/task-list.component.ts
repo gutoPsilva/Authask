@@ -274,6 +274,7 @@ export class TaskListComponent {
   setFilters(filter: keyof IFilters) {
     this.filtersSelected[filter] = !this.filtersSelected[filter];
     this.filteredTaskList = this.applyFilters();
+    this.sortBy(this.sortBySelected);
   }
 
   applyFilters() {
