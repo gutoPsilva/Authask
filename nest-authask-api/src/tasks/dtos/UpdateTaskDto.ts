@@ -1,6 +1,6 @@
 import {
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsIn,
   IsOptional,
   IsString,
@@ -28,10 +28,10 @@ export class UpdateTaskDto {
   urgent: boolean;
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   startsAt: Date;
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   endsAt: Date;
 }

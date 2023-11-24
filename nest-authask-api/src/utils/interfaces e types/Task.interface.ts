@@ -6,7 +6,7 @@ export interface ICreateTaskDetails {
   status: TaskStatus;
   urgent: boolean;
   startsAt?: Date; // optional but not null in DB
-  endsAt?: Date; // optional
+  endsAt?: Date; // optional but not null
   // createdAt is generated automatically when registering the task
 }
 
@@ -26,5 +26,5 @@ export interface ITaskInfo {
   status: TaskStatus;
   urgent: boolean;
   startsAt: Date;
-  endsAt?: Date;
+  endsAt: Date;
 }

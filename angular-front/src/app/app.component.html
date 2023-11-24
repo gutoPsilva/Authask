@@ -7,9 +7,16 @@
     (closed)="alertMessage = ''"
     >{{ alertMessage }}
   </ngb-alert>
-  <ngb-alert #loadingAlert class="loading-alert" *ngIf="loadingMessage" [dismissible]="false">
+  <ngb-alert
+    #loadingAlert
+    class="loading-alert"
+    *ngIf="loadingMessage"
+    [dismissible]="false"
+  >
     {{ loadingMessage }}
-    <fa-icon [icon]="loadingIcon" [spin]="true"></fa-icon>
+    <div class="spinner-border spin text-light spinner-border-sm" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
   </ngb-alert>
   <router-outlet></router-outlet>
 </main>

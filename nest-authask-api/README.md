@@ -151,15 +151,21 @@ A urgent property to set the priority of the task.
 
 #### startsAt
 
-StartsAt is optional however, if the user doesn't provide a Date the API will set the value to a new Date instance when the task is created.
+StartsAt is optional, however, if the user doesn't provide a Date the API will set the value to a new Date instance when the task is created.
 
 - startsAt should be a Date, if provided.
+- Should follow ISO-8601: "YYYY-MM-DDTHH:MM:SS.sssZ";
+- Must be a valid date, otherwise, server will send error for cases like 2023-02-31.
+- Min and Max dates are: 1900-01-01T00:00:00.000Z, 2099-12-31T23:59:59.999Z.
 
 #### endsAt
 
-EndsAt is optional, however it can assume a null value.
+EndsAt is optional, however, if the user doesn't provide a Date the API will set the value to a new Date instance when the task is created and add 1 day.
 
 - endsAt should be a Date, if provided.
+- Should follow ISO-8601: "YYYY-MM-DDTHH:MM:SS.sssZ".
+- Must be a valid date, otherwise, server will send error for cases like 2023-02-31.
+- Min and Max dates are: 1900-01-01T00:00:00.000Z, 2099-12-31T23:59:59.999Z.
 
 ### Update Task
 

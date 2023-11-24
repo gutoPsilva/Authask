@@ -71,7 +71,7 @@ export class SignUpComponent {
     return this.signForm.get('confirmPassword');
   }
 
-  async onSubmit() {
+  onSubmit() {
     if (this.password?.value !== this.confirmPassword?.value) {
       this.unmatchingPasswords = true;
       return; // do not proced even if all fields are fullfield, because these two inputs must be the same.
@@ -84,7 +84,7 @@ export class SignUpComponent {
       );
       this.dbUsed = { email: '', username: '' }; // reset dbUsedDetails
 
-      await this.authService.registerLocalUser(registerInfo).subscribe({
+      this.authService.registerLocalUser(registerInfo).subscribe({
         next: (res) => {
           console.log(res);
           this.alertService.showAlert(

@@ -1,6 +1,6 @@
 import {
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsIn,
   IsNotEmpty,
   IsOptional,
@@ -26,10 +26,10 @@ export class CreateTaskDto {
   urgent: boolean;
 
   @IsOptional() // it is optional however it will not be null, if startsAt isn't provided, it will be generated automatically at the instant of the registration
-  @IsDate()
+  @IsDateString()
   startsAt: Date;
 
-  @IsOptional() // it can be null
-  @IsDate()
+  @IsOptional() // same as startsAt
+  @IsDateString()
   endsAt: Date;
 }

@@ -8,15 +8,41 @@ export interface ITask {
   status: TaskStatus;
   urgent: boolean;
   startsAt: Date;
-  endsAt: Date | null;
+  endsAt: Date;
   createdAt: Date;
 }
 
-export interface ITaskCreate {
+export interface ITaskInfo {
   title: string;
   description: string;
   status: TaskStatus;
   urgent: boolean;
-  startsAt: Date | null;
-  endsAt: Date | null;
+  startsAt: Date;
+  endsAt: Date;
+}
+
+export interface IFilters {
+  "OPEN": boolean,
+  "IN_PROGRESS": boolean,
+  "DONE": boolean,
+}
+
+export interface IUSDate {
+  startDate: string;
+  startHour: string;
+}
+
+export interface IUEDate {
+  endDate: string;
+  endHour: string;
+}
+
+export interface ICSDate {
+  cStartDate: string;
+  cStartHour: string;
+}
+
+export interface ICEDate {
+  cEndDate: string;
+  cEndHour: string;
 }

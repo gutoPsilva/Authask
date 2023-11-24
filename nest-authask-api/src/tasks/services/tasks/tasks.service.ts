@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DiscordUser } from 'src/entities/DiscordUser.entity';
 import { LocalUser } from 'src/entities/LocalUser.entity';
 import { Task } from 'src/entities/Task.entity';
+import { validateDate } from 'src/utils/dateManipulators';
 import {
   ICreateTaskDetails,
   ITaskInfo,
@@ -47,6 +48,26 @@ export class TasksService {
   ): Promise<ITaskInfo> {
     if (!createTaskDetails.startsAt) createTaskDetails.startsAt = new Date(); // startsAt isn't provided, it will be generated automatically and can be changed after
 
+    if (!createTaskDetails.endsAt) {
+      // endsAt isn't provided, it will be generated automatically and can be changed after
+      const endsAt = new Date();
+      endsAt.setDate(endsAt.getDate() + 1);
+      createTaskDetails.endsAt = endsAt;
+    }
+
+    createTaskDetails.startsAt = validateDate(
+      createTaskDetails.startsAt.toString(),
+    );
+    createTaskDetails.endsAt = validateDate(
+      createTaskDetails.endsAt.toString(),
+    );
+
+    if (createTaskDetails.endsAt < createTaskDetails.startsAt)
+      throw new HttpException(
+        'End date must be after start date.',
+        HttpStatus.BAD_REQUEST,
+      );
+
     const newTask = this.taskRepository.create({
       ...createTaskDetails,
       localUser: user instanceof LocalUser ? user : null, // set the foreign keys
@@ -78,6 +99,24 @@ export class TasksService {
         throw new HttpException('Task not found.', HttpStatus.NOT_FOUND);
 
       await this.checkUserPermission(user, taskToUpdate);
+
+      updateTaskDetails.endsAt = validateDate(
+        updateTaskDetails.endsAt.toString(),
+      );
+
+      updateTaskDetails.startsAt = validateDate(
+        updateTaskDetails.startsAt.toString(),
+      );
+
+      if (
+        updateTaskDetails.endsAt &&
+        updateTaskDetails.startsAt &&
+        updateTaskDetails.endsAt < updateTaskDetails.startsAt
+      )
+        throw new HttpException(
+          'End date must be after start date.',
+          HttpStatus.BAD_REQUEST,
+        );
 
       const updatedTask = this.taskRepository.merge(
         taskToUpdate,

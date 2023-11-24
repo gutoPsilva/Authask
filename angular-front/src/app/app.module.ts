@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -35,6 +35,7 @@ import { HomeComponent } from './components/pages/home/home.component';
     BrowserModule,
     AppRoutingModule,
     RouterModule,
+    FormsModule,
     FontAwesomeModule,
     ReactiveFormsModule,
     NgbModule,

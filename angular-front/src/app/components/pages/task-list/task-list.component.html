@@ -1,99 +1,666 @@
 <section>
   <article class="top-container">
     <div class="search-bar-container">
-      <input type="search" placeholder="Search Tasks" />
+      <input type="search" [(ngModel)]="searchString" (ngModelChange)="searchTasks()" placeholder="Search Tasks" />
     </div>
-    <div class="dropdown">
-      <div
-        [ngClass]="sortByMenu ? 'select-clicked' : ''"
-        (click)="toggleSortMenu()"
-        (keydown.enter)="toggleSortMenu()"
-        class="select"
-        tabindex="0"
-        title="Sort By"
-      >
-        <div class="selected">{{ sortBySelected }}</div>
-        <fa-icon [icon]="faCaretUp"></fa-icon>
+    <div class="filter-group">
+      <div class="dropdown dropdown-sort">
+        <div
+          [ngClass]="sortByMenu ? 'select-clicked' : ''"
+          (click)="toggleSortMenu()"
+          (keydown.enter)="toggleSortMenu()"
+          class="select"
+          tabindex="0"
+          title="Sort By"
+        >
+          <div class="selected">{{ sortBySelected }}</div>
+          <fa-icon [icon]="faCaretUp"></fa-icon>
+        </div>
+        <ul *ngIf="sortByMenu" class="menu">
+          <li
+            tabindex="0"
+            (keydown.enter)="sortBy('Recently Added')"
+            (click)="sortBy('Recently Added')"
+          >
+            Recently Added
+          </li>
+          <li
+            tabindex="0"
+            (keydown.enter)="sortBy('Start Date')"
+            (click)="sortBy('Start Date')"
+          >
+            Start Date
+          </li>
+          <li
+            tabindex="0"
+            (keydown.enter)="sortBy('End Date')"
+            (click)="sortBy('End Date')"
+          >
+            End Date
+          </li>
+          <li
+            tabindex="0"
+            (keydown.enter)="sortBy('Urgent')"
+            (click)="sortBy('Urgent')"
+          >
+            Urgent
+          </li>
+        </ul>
       </div>
-      <ul *ngIf="sortByMenu" class="menu">
-        <li
-          tabindex="0"
-          (keydown.enter)="sortBy('Recently Added')"
-          (click)="sortBy('Recently Added')"
-        >
-          Recently Added
-        </li>
-        <li
-          tabindex="0"
-          (keydown.enter)="sortBy('Start Date')"
-          (click)="sortBy('Start Date')"
-        >
-          Start Date
-        </li>
-        <li
-          tabindex="0"
-          (keydown.enter)="sortBy('End Date')"
-          (click)="sortBy('End Date')"
-        >
-          End Date
-        </li>
-        <li
-          tabindex="0"
-          (keydown.enter)="sortBy('Urgent')"
-          (click)="sortBy('Urgent')"
-        >
-          Urgent
-        </li>
-      </ul>
+      <div class="dropdown dropdown-filter">
+        <div class="select" [ngClass]="filterMenu ? 'select-clicked' : ''" tabindex="0" (keydown.enter)="toggleFilterMenu()" title="Apply Filters" (click)="toggleFilterMenu()">
+          <fa-icon [icon]="filterIcon"></fa-icon>
+        </div>
+        <ul *ngIf="filterMenu" class="menu">
+          <li
+            tabindex="0"
+            [ngClass]="filtersSelected.OPEN ? 'open' : ''"
+            (click)="setFilters('OPEN')"
+            (keydown.enter)="setFilters('OPEN')"
+          >
+            <p class="p-open">Open</p>
+          </li>
+          <li
+            tabindex="0"
+            [ngClass]="filtersSelected.IN_PROGRESS ? 'in-progress' : ''"
+            (click)="setFilters('IN_PROGRESS')"
+            (keydown.enter)="setFilters('IN_PROGRESS')"
+          >
+            <p class="p-in-progress">In Progress</p>
+          </li>
+          <li
+            tabindex="0"
+            [ngClass]="filtersSelected.DONE ? 'completed' : ''"
+            (click)="setFilters('DONE')"
+            (keydown.enter)="setFilters('DONE')"
+          >
+            <p class="p-completed">Done</p>
+          </li>
+        </ul>
+      </div>
     </div>
-    <button class="btn-create-task" (click)="createTask()">
-      <span>Create Task</span><fa-icon [icon]="addIcon"></fa-icon>
-    </button>
+    <div class="general-task-operations">
+      <button class="btn-create-task" (click)="open(contentCreate)">
+        <span>Create Task</span><fa-icon [icon]="addIcon"></fa-icon>
+      </button>
+      <button class="btn-delete-tasks" (click)="open(contentDeleteAll)">
+        <span>Delete Tasks</span><fa-icon [icon]="trashIcon"></fa-icon>
+      </button>
+    </div>
   </article>
-  <p *ngIf="fetchingTasks" class="msg-tasks">
-    Fetching your tasks...
-    <fa-icon [icon]="loadingIcon" [spin]="true"></fa-icon>
-  </p>
-  <p *ngIf="!fetchingTasks && taskList.length === 0" class="msg-tasks">
-    You don't have any tasks, why don't you create one?
-  </p>
-</section>
 
-<!-- 
-<div *ngIf="fetchingTasks" class="fetching-msg">
-  fetching data...
-</div>
-<div *ngFor="let task of taskList">
-  {{ task.title }}
-</div> 
-
-// tasks
-<article class="tasks-container">
-    <div class="task" ngbAccordion *ngFor="let task of taskList">
+  <article class="tasks-container" *ngIf="taskList.length > 0">
+    <div class="task" ngbAccordion *ngFor="let task of filteredTaskList">
+      <span *ngIf="task.urgent" class="dot" title="Urgent"></span>
       <div ngbAccordionItem [collapsed]="true">
         <h2 ngbAccordionHeader>
           <button ngbAccordionButton>
-            <span class="title"
-              >{{
-                task.title
-              }}AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span
-            >
-            <span
-              class="dot"
-              [ngClass]="task.urgent ? 'urgent' : ''"
-              title="Urgency"
-            ></span>
+            <div class="task-header">
+              <p class="title">{{ task.title }}</p>
+              <div class="sub-title">
+                <p class="date">
+                  {{ task.startsAt | date : "MMM d, y, h:mm a" }}
+                </p>
+                <span
+                  class="status"
+                  [ngClass]="{
+                    open: task.status === 'OPEN',
+                    'in-progress': task.status === 'IN_PROGRESS',
+                    completed: task.status === 'DONE'
+                  }"
+                  >{{ task.status }}</span
+                >
+              </div>
+            </div>
           </button>
         </h2>
         <div ngbAccordionCollapse>
           <div ngbAccordionBody>
             <ng-template>
-              <p>Details - {{ task.description }}</p>
-              <p>Task Created at - {{ task.createdAt }}</p>
+              <p>{{ task.description }}</p>
+              <p *ngIf="task.endsAt">
+                <strong>Due Date</strong> -
+                {{ task.endsAt | date : "MMM d, y, h:mm a" }}
+              </p>
+              <p>
+                <strong>Task Created at</strong> - {{ task.createdAt | date }}
+              </p>
+              <div class="action-buttons-container">
+                <button (click)="open(contentDelete)" class="btn-delete">
+                  Delete
+                </button>
+                <button
+                  (click)="open(contentUpdate); loadUpdateFields(task)"
+                  class="btn-edit"
+                >
+                  Update
+                </button>
+              </div>
             </ng-template>
           </div>
         </div>
       </div>
+
+      <!-- BOOTSTRAP MODAL for DELETE -->
+      <ng-template #contentDelete let-modal>
+        <div class="modal-header custom-border">
+          <h4 class="modal-title" id="modal-title"><strong>Task deletion</strong></h4>
+          <button
+            type="button"
+            class="btn-close"
+            aria-describedby="modal-title"
+            (click)="modal.dismiss('Cross click')"
+          ></button>
+        </div>
+        <div class="modal-body remove-border">
+          <p>
+            <strong
+              >Are you sure you want to delete the task:
+              <span class="task-title-to-manipulate">{{ task.title }}</span
+              >?</strong
+            >
+          </p>
+          <p>
+            All information associated to this task will be permanently deleted.
+            <span class="text-danger">This operation can not be undone.</span>
+          </p>
+        </div>
+        <div class="modal-footer remove-border">
+          <button
+            type="button"
+            class="btn btn-cancel"
+            (click)="modal.dismiss('cancel click')"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-confirm-delete"
+            (click)="deleteTask(task.id)"
+          >
+            Confirm Delete
+          </button>
+        </div>
+      </ng-template>
+
+      <!-- BOOTSTRAP MODAL for UPDATE -->
+      <ng-template #contentUpdate let-modal>
+        <div class="modal-header custom-border">
+          <h4 class="modal-title" id="modal-basic-title">
+            <strong>
+              Updating
+              <span class="task-title-to-manipulate">{{
+                task.title
+              }}</span></strong
+            >
+          </h4>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+          ></button>
+        </div>
+        <div class="modal-body custom-border">
+          <form
+            class="form-container"
+            name="updateForm"
+            [formGroup]="taskFormUpdate"
+            (ngSubmit)="submitUpdate(task.id)"
+            #updateFormDir="ngForm"
+          >
+            <div class="input-group">
+              <span class="input-group-text">Title</span>
+              <textarea
+                class="form-control"
+                id="title"
+                formControlName="title"
+                aria-label="Title"
+              ></textarea>
+            </div>
+            <div
+              class="wrong-container"
+              *ngIf="title?.invalid && updateFormDir.submitted"
+            >
+              <p *ngIf="title?.errors?.['required']">Title is required</p>
+              <p *ngIf="title?.errors?.['maxlength']">
+                Title max length is 255 characters
+              </p>
+            </div>
+            <div class="input-group mt-2">
+              <span class="input-group-text">Description</span>
+              <textarea
+                class="form-control"
+                id="description"
+                formControlName="description"
+                aria-label="Description"
+              ></textarea>
+            </div>
+            <div
+              class="wrong-container"
+              *ngIf="description?.invalid && updateFormDir.submitted"
+            >
+              <p *ngIf="description?.errors?.['required']">
+                Description is required
+              </p>
+              <p *ngIf="description?.errors?.['maxlength']">
+                Description max length is 255 characters
+              </p>
+            </div>
+            <div class="radio-group mt-2">
+              <span>Task Status:</span>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="status"
+                  formControlName="status"
+                  value="OPEN"
+                  [value]="'OPEN'"
+                  id="flexRadioDefault1"
+                />
+                <label class="form-check-label open" for="flexRadioDefault1">
+                  OPEN
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="status"
+                  formControlName="status"
+                  value="IN_PROGRESS"
+                  [value]="'IN_PROGRESS'"
+                  id="flexRadioDefault2"
+                />
+                <label
+                  class="form-check-label in-progress"
+                  for="flexRadioDefault2"
+                >
+                  IN_PROGRESS
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="status"
+                  formControlName="status"
+                  value="DONE"
+                  [value]="'DONE'"
+                  id="flexRadioDefault3"
+                />
+                <label
+                  class="form-check-label completed"
+                  for="flexRadioDefault3"
+                >
+                  DONE
+                </label>
+              </div>
+            </div>
+            <div class="form-check mt-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                formControlName="urgent"
+                id="defaultCheck1"
+              />
+              <label class="form-check-label" for="defaultCheck1">
+                Urgent
+              </label>
+            </div>
+            <div class="input-group mt-2" formGroupName="startsAt">
+              <span class="input-group-text w-87">Starts at:</span>
+              <input
+                type="text"
+                aria-label="StartDate"
+                class="form-control"
+                formControlName="startDate"
+                placeholder="YYYY-MM-DD"
+              />
+              <input
+                type="text"
+                aria-label="StartHour"
+                class="form-control"
+                formControlName="startHour"
+                placeholder="HH:MM"
+              />
+            </div>
+            <div
+              class="wrong-container ml-87"
+              *ngIf="startsAt?.invalid && updateFormDir.submitted"
+            >
+              <p *ngIf="startsAt?.get('startDate')?.errors?.['required']">
+                Start Date is required
+              </p>
+              <!-- Show invalidDate only if date was provided -->
+              <p
+                *ngIf="startsAt?.get('startDate')?.errors?.['invalidDate'] && !startsAt?.get('startDate')?.errors?.['required']"
+              >
+                Invalid date, must be between 1900-01-01 to 2099-12-31
+              </p>
+              <p *ngIf="startsAt?.get('startHour')?.errors?.['required']">
+                Start Hour is required
+              </p>
+              <p
+                *ngIf="startsAt?.get('startHour')?.errors?.['invalidHour'] && !startsAt?.get('startHour')?.errors?.['required']"
+              >
+                Invalid hour, must be between 00:00:00 to 23:59:59
+              </p>
+            </div>
+            <div class="input-group mt-2" formGroupName="endsAt">
+              <span class="input-group-text w-87">Ends at: </span>
+              <input
+                type="text"
+                aria-label="EndDate"
+                class="form-control"
+                formControlName="endDate"
+                placeholder="YYYY-MM-DD"
+              />
+              <input
+                type="text"
+                aria-label="EndHour"
+                class="form-control"
+                formControlName="endHour"
+                placeholder="HH:MM"
+              />
+            </div>
+            <div
+              class="wrong-container ml-87"
+              *ngIf="endsAt?.invalid && updateFormDir.submitted"
+            >
+              <p *ngIf="endsAt?.get('endDate')?.errors?.['required']">
+                End Date is required
+              </p>
+              <!-- Show invalidDate only if date was provided -->
+              <p
+                *ngIf="endsAt?.get('endDate')?.errors?.['invalidDate'] && !endsAt?.get('endDate')?.errors?.['required']"
+              >
+                Invalid date, must be between 1900-01-01 to 2099-12-31
+              </p>
+              <p *ngIf="endsAt?.get('endHour')?.errors?.['required']">
+                End Hour is required
+              </p>
+              <p
+                *ngIf="endsAt?.get('endHour')?.errors?.['invalidHour'] && !endsAt?.get('endHour')?.errors?.['required']"
+              >
+                Invalid hour, must be between 00:00:00 to 23:59:59
+              </p>
+            </div>
+            <div
+              class="wrong-container"
+              *ngIf="startDateAfterEndDate && updateFormDir.submitted"
+            >
+              Start date must be earlier than end date
+            </div>
+            <div class="submit-container">
+              <button type="submit" class="btn btn-confirm-edit">
+                Confirm Update
+              </button>
+            </div>
+          </form>
+        </div>
+      </ng-template>
     </div>
   </article>
--->
+
+  <!-- BOOTSTRAP MODAL for CREATE -->
+  <ng-template #contentCreate let-modal>
+    <div class="modal-header custom-border">
+      <h4 class="modal-title" id="modal-basic-title"><strong>Creating task</strong></h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body custom-border">
+      <form
+        class="form-container"
+        name="createForm"
+        [formGroup]="taskFormCreate"
+        (ngSubmit)="submitCreate()"
+        #createFormDir="ngForm"
+      >
+        <div class="input-group">
+          <span class="input-group-text">Title</span>
+          <textarea
+            class="form-control"
+            id="title"
+            formControlName="cTitle"
+            aria-label="Title"
+          ></textarea>
+        </div>
+        <div
+          class="wrong-container"
+          *ngIf="cTitle?.invalid && createFormDir.submitted"
+        >
+          <p *ngIf="cTitle?.errors?.['required']">Title is required</p>
+          <p *ngIf="cTitle?.errors?.['maxlength']">
+            Title max length is 255 characters
+          </p>
+        </div>
+        <div class="input-group mt-2">
+          <span class="input-group-text">Description</span>
+          <textarea
+            class="form-control"
+            id="description"
+            formControlName="cDescription"
+            aria-label="Description"
+          ></textarea>
+        </div>
+        <div
+          class="wrong-container"
+          *ngIf="cDescription?.invalid && createFormDir.submitted"
+        >
+          <p *ngIf="cDescription?.errors?.['required']">
+            Description is required
+          </p>
+          <p *ngIf="cDescription?.errors?.['maxlength']">
+            Description max length is 255 characters
+          </p>
+        </div>
+        <div class="radio-group mt-2">
+          <span>Task Status:</span>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="cStatus"
+              formControlName="cStatus"
+              value="OPEN"
+              [value]="'OPEN'"
+              id="cflexRadioDefault1"
+            />
+            <label class="form-check-label open" for="cflexRadioDefault1">
+              OPEN
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="cStatus"
+              formControlName="cStatus"
+              value="IN_PROGRESS"
+              [value]="'IN_PROGRESS'"
+              id="cflexRadioDefault2"
+            />
+            <label
+              class="form-check-label in-progress"
+              for="cflexRadioDefault2"
+            >
+              IN_PROGRESS
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="cStatus"
+              formControlName="cStatus"
+              value="DONE"
+              [value]="'DONE'"
+              id="cflexRadioDefault3"
+            />
+            <label class="form-check-label completed" for="cflexRadioDefault3">
+              DONE
+            </label>
+          </div>
+        </div>
+        <div class="form-check mt-2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            formControlName="cUrgent"
+            id="defaultCheck2"
+          />
+          <label class="form-check-label" for="defaultCheck2"> Urgent </label>
+        </div>
+        <div class="input-group mt-2" formGroupName="cStartsAt">
+          <span class="input-group-text w-87">Starts at:</span>
+          <input
+            type="text"
+            aria-label="StartDate"
+            class="form-control"
+            formControlName="cStartDate"
+            placeholder="YYYY-MM-DD"
+          />
+          <input
+            type="text"
+            aria-label="StartHour"
+            class="form-control"
+            formControlName="cStartHour"
+            placeholder="HH:MM"
+          />
+        </div>
+        <div
+          class="wrong-container ml-87"
+          *ngIf="cStartsAt?.invalid && createFormDir.submitted"
+        >
+          <p *ngIf="cStartsAt?.get('cStartDate')?.errors?.['required']">
+            Start Date is required
+          </p>
+          <!-- Show invalidDate only if date was provided -->
+          <p
+            *ngIf="cStartsAt?.get('cStartDate')?.errors?.['invalidDate'] && !cStartsAt?.get('cStartDate')?.errors?.['required']"
+          >
+            Invalid date, must be between 1900-01-01 to 2099-12-31
+          </p>
+          <p *ngIf="cStartsAt?.get('cStartHour')?.errors?.['required']">
+            Start Hour is required
+          </p>
+          <p
+            *ngIf="cStartsAt?.get('cStartHour')?.errors?.['invalidHour'] && !cStartsAt?.get('cStartHour')?.errors?.['required']"
+          >
+            Invalid hour, must be between 00:00:00 to 23:59:59
+          </p>
+        </div>
+        <div class="input-group mt-2" formGroupName="cEndsAt">
+          <span class="input-group-text w-87">Ends at: </span>
+          <input
+            type="text"
+            aria-label="EndDate"
+            class="form-control"
+            formControlName="cEndDate"
+            placeholder="YYYY-MM-DD"
+          />
+          <input
+            type="text"
+            aria-label="EndHour"
+            class="form-control"
+            formControlName="cEndHour"
+            placeholder="HH:MM"
+          />
+        </div>
+        <div
+          class="wrong-container ml-87"
+          *ngIf="cEndsAt?.invalid && createFormDir.submitted"
+        >
+          <p *ngIf="cEndsAt?.get('cEndDate')?.errors?.['required']">
+            End Date is required
+          </p>
+          <!-- Show invalidDate only if date was provided -->
+          <p
+            *ngIf="cEndsAt?.get('cEndDate')?.errors?.['invalidDate'] && !cEndsAt?.get('cEndDate')?.errors?.['required']"
+          >
+            Invalid date, must be between 1900-01-01 to 2099-12-31
+          </p>
+          <p *ngIf="cEndsAt?.get('cEndHour')?.errors?.['required']">
+            End Hour is required
+          </p>
+          <p
+            *ngIf="cEndsAt?.get('cEndHour')?.errors?.['invalidHour'] && !cEndsAt?.get('cEndHour')?.errors?.['required']"
+          >
+            Invalid hour, must be between 00:00:00 to 23:59:59
+          </p>
+        </div>
+        <div
+          class="wrong-container"
+          *ngIf="createFormDir.submitted && cStartDateAfterEndDate"
+        >
+          Start date must be earlier than end date
+        </div>
+        <div class="submit-container">
+          <button type="submit" class="btn btn-confirm-create">
+            Create Task
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <!-- BOOTSTRAP MODAL for DELETING ALL -->
+  <ng-template #contentDeleteAll let-modal>
+    <div class="modal-header custom-border">
+      <h4 class="modal-title"><strong>DELETE ALL TASKS?</strong></h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body remove-border">
+      <p>
+        <strong
+          >Are you sure you want to
+          <span class="task-title-to-manipulate">DELETE ALL TASKS</span
+          >?</strong
+        >
+      </p>
+      <p>
+        All information associated to these tasks will be permanently deleted.
+        <span class="text-danger">This operation can not be undone.</span>
+      </p>
+    </div>
+    <div class="modal-footer remove-border">
+      <button
+        type="button"
+        class="btn btn-cancel"
+        (click)="modal.dismiss('cancel click')"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-confirm-delete"
+        (click)="deleteAllTasks()"
+      >
+        DELETE ALL TASKS
+      </button>
+    </div>
+  </ng-template>
+
+  <div *ngIf="fetchingTasks" class="msg-tasks">
+    <p>Fetching your tasks...</p>
+    <div class="spinner-border text-light spinner-border-sm" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <p *ngIf="!fetchingTasks && taskList.length === 0" class="msg-tasks">
+    You don't have any tasks, why don't you create one?
+  </p>
+  <p *ngIf="!fetchingTasks && filteredTaskList.length === 0 && taskList.length !== 0" class="msg-tasks"> The applied filters doesn't correspond to any existing task.</p>
+</section>

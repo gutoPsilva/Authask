@@ -10,8 +10,22 @@
     flex-direction: row;
   }
 
+  .filter-group {
+    display: flex;
+    gap: 0.5em;
+    margin-right: 2em;
+  }
+
+  .general-task-operations {
+    display: flex;
+    gap: 0.5em;
+
+    @media (min-width: 1024px) {
+      margin-left: auto;
+    }
+  }
+
   .dropdown {
-    width: fit-content;
     position: relative;
     color: $whiteSmoke;
 
@@ -37,16 +51,12 @@
       &:hover,
       &:focus {
         border-color: $jasmine;
-
-        fa-icon {
-          transform: rotate(90deg);
-        }
       }
     }
 
     .menu {
       position: absolute;
-      margin-top: .25em;
+      margin-top: 0.25em;
       width: 100%;
       padding: 0.2em 0.5em;
       background: rgba($color: #000000, $alpha: 0.1);
@@ -54,7 +64,7 @@
       -webkit-backdrop-filter: blur(5px);
       border: 1px solid $jasmine;
       border-radius: 0px 0px 6px 6px;
-      z-index: 10;
+      z-index: 11; // urgentDot is 10
       transition: 0.2s;
 
       @media (min-width: 1024px) {
@@ -66,10 +76,98 @@
         padding: 0.7em 0.5em;
         transition: all 0.25s ease-in-out;
         outline: none;
+      }
+    }
+  }
 
+  .dropdown-sort {
+    min-width: 160px;
+    max-width: fit-content;
+
+    .select {
+      &:hover,
+      &:focus {
+        fa-icon {
+          transform: rotate(90deg);
+        }
+      }
+    }
+
+    .menu {
+      li {
         &:hover,
         &:focus {
           color: $mint;
+        }
+      }
+    }
+
+    .select-clicked {
+      fa-icon {
+        transform: rotate(180deg) !important;
+      }
+    }
+  }
+
+  .dropdown-filter {
+    .select {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      padding: 0;
+      height: 100%;
+      aspect-ratio: 1;
+    }
+
+    .menu {
+      width: max-content;
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+    }
+
+    li {
+      position: relative;
+      width: fit-content;
+
+      &:hover,
+      &:focus {
+        p::after {
+          transform-origin: bottom left;
+          transform: scaleX(1);
+        }
+      }
+
+      .p-open::after {
+        background-color: $coralRed;
+      }
+
+      .p-in-progress::after {
+        background-color: $coralYellow;
+      }
+
+      .p-completed::after {
+        background-color: $coralGreen;
+      }
+
+      p {
+        position: relative;
+
+        &:after {
+          // underline animated
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 1px;
+          background-color: inherit;
+          bottom: 0;
+          left: 0;
+          transform: scaleX(0);
+          transform-origin: bottom right;
+          transition: transform 0.25s ease-in-out;
         }
       }
     }
@@ -78,6 +176,7 @@
 
 .tasks-container {
   display: grid;
+  margin-top: 3rem;
   gap: 1.5rem;
   grid-template-columns: 1fr;
 
@@ -116,7 +215,8 @@
   }
 }
 
-.btn-create-task {
+.btn-create-task,
+.btn-delete-tasks {
   position: relative;
   display: flex;
   align-items: center;
@@ -134,7 +234,7 @@
   border-image-source: linear-gradient(to left, $mint, $jasmine);
   border-image-slice: 1;
 
-  @media (min-width: 1024px){
+  @media (min-width: 1024px) {
     margin-left: auto;
   }
 
@@ -153,42 +253,90 @@
     margin-top: -4px;
   }
 
+  &:hover::after,
+  &:focus::after {
+    inset: 0px;
+  }
+}
+
+.btn-create-task {
   &:hover,
   &:focus {
-    &::after {
-      inset: 0px;
-    }
-
     fa-icon {
       transform: rotate(90deg);
     }
   }
 }
 
+.btn-delete-tasks {
+  &:hover,
+  &:focus {
+    fa-icon {
+      animation: shake 0.5s;
+      animation-iteration-count: infinite;
+    }
+  }
+}
+
 .task {
+  position: relative;
+  color: $whiteSmoke;
   overflow: wrap;
   word-break: break-all;
+
+  .dot {
+    top: -4px;
+    right: -4px;
+    position: absolute;
+    background: $jasmine;
+    border-radius: 99999px;
+    aspect-ratio: 1;
+    height: 0.8rem;
+    width: 0.8rem;
+    transform: scale(1);
+    z-index: 10;
+
+    animation: pulse 2s infinite;
+  }
+
+  h2 {
+    transition: all 0.25s ease-in-out;
+
+    &:hover {
+      box-shadow: 0px 0px 10px 1px rgba($color: $mint, $alpha: 0.75);
+    }
+  }
 
   button {
     font-weight: 400;
 
-    .title {
-      margin-right: 0.5rem;
-    }
+    .task-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25em;
+      margin-right: 0.25em;
 
-    .dot {
-      margin-left: auto;
-      margin-right: 0.5rem;
-      border: 1px solid $jasmine;
-      border-radius: 99999px;
-      aspect-ratio: 1;
-      height: 0.9rem;
-      width: 0.9rem;
-      transform: scale(1);
-    }
+      .title {
+        width: fit-content;
+        font-weight: bold;
+        font-size: 1.25rem;
+      }
 
-    .urgent {
-      animation: pulse 2s infinite;
+      .sub-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+
+      .date {
+        width: fit-content;
+      }
+
+      .status {
+        font-size: 0.75rem;
+        border: 1px solid transparent;
+        padding: 0.2em 0.2em 0 0.2em;
+      }
     }
   }
 }
@@ -210,20 +358,223 @@
   }
 }
 
-.select-clicked {
-  border-color: $jasmine !important;
-  border-radius: 6px 6px 0px 0px !important;
-
-  fa-icon {
-    transform: rotate(180deg) !important;
+@keyframes shake {
+  0% {
+    transform: translate(0.5px, 0.5px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-0.5px, -1px) rotate(-0.5deg);
+  }
+  20% {
+    transform: translate(-1.5px, 0px) rotate(0.5deg);
+  }
+  30% {
+    transform: translate(1.5px, 1px) rotate(0deg);
+  }
+  40% {
+    transform: translate(0.5px, -0.5px) rotate(0.5deg);
+  }
+  50% {
+    transform: translate(-0.5px, 1px) rotate(-0.5deg);
+  }
+  60% {
+    transform: translate(-1.5px, 0.5px) rotate(0deg);
+  }
+  70% {
+    transform: translate(1.5px, 0.5px) rotate(-0.5deg);
+  }
+  80% {
+    transform: translate(-0.5px, -0.5px) rotate(0.5deg);
+  }
+  90% {
+    transform: translate(0.5px, 1px) rotate(0deg);
+  }
+  100% {
+    transform: translate(0.5px, -1px) rotate(-0.5deg);
   }
 }
 
-.msg-tasks{
+.select-clicked {
+  border-color: $jasmine !important;
+  border-radius: 6px 6px 0px 0px !important;
+}
+
+.msg-tasks {
   display: flex;
   font-weight: bold;
   font-size: 1.25rem;
   margin-top: 2em;
   color: $whiteSmoke;
-  gap: 2em;
+  gap: 1em;
+}
+
+.open {
+  color: $coralRed;
+}
+
+.in-progress {
+  color: $coralYellow;
+}
+
+.completed {
+  color: $coralGreen;
+}
+
+.action-buttons-container {
+  margin-top: 0.5em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-delete,
+.btn-edit {
+  border: none;
+  background: transparent;
+  font-weight: bold;
+
+  padding: 0.35em 1em;
+  border-radius: 0.25em;
+  border: none;
+  font-size: 1rem;
+  color: $whiteSmoke;
+  outline: none;
+
+  transition: all 250ms ease-in-out;
+}
+
+.btn-delete {
+  background-color: $red;
+  box-shadow: 0 6px 0 $red-dark;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0 4px 0 $red-dark;
+    transform: translateY(2px);
+  }
+
+  &:active {
+    box-shadow: 0 0 0 $red-dark;
+    transform: translateY(6px);
+  }
+}
+
+.btn-edit {
+  background-color: $mint;
+  box-shadow: 0 6px 0 $mint-dark;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0 4px 0 $mint-dark;
+    transform: translateY(2px);
+  }
+
+  &:active {
+    box-shadow: 0 0 0 $mint-dark;
+    background-color: $mint;
+    transform: translateY(6px);
+  }
+}
+
+// modal styles
+.task-title-to-manipulate {
+  color: $mint;
+}
+
+.remove-border {
+  border: none;
+}
+
+.custom-border {
+  border: none;
+  border-bottom: 1px solid $mint;
+}
+
+.btn-cancel {
+  border: 1px solid $mint;
+  background: transparent;
+  color: $whiteSmoke;
+  transition: all 0.25s ease-in-out;
+
+  &:hover,
+  &:focus {
+    border-color: $mint-dark;
+    background-color: $mint;
+  }
+}
+
+.btn-confirm-delete {
+  background: $red;
+  color: $whiteSmoke;
+  transition: all 0.25s ease-in-out;
+
+  &:hover,
+  &:focus {
+    background-color: $red-dark;
+  }
+}
+
+.btn-confirm-edit,
+.btn-confirm-create {
+  background: $mint;
+  color: $whiteSmoke;
+  transition: all 0.25s ease-in-out;
+
+  &:hover,
+  &:focus {
+    background-color: $mint-dark;
+  }
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+
+  .form-check-input {
+    cursor: pointer;
+  }
+
+  .form-control {
+    background: transparent;
+    border: 1px solid $jasmine;
+    color: $whiteSmoke;
+    outline: none;
+
+    &::placeholder {
+      color: rgba($color: $gray, $alpha: 0.75);
+    }
+  }
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.wrong-container {
+  margin-top: 0.25em;
+  color: $coralRed;
+
+  display: flex;
+  gap: 1em;
+
+  * {
+    flex: 1;
+  }
+}
+
+.submit-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1em;
+  margin-top: 1em;
+}
+
+.ml-87 {
+  // so the startsAt & endsAt wrong-container can be aligned
+  margin-left: 87px;
+}
+
+.w-87 {
+  width: 87px;
 }

@@ -8,11 +8,11 @@ $btn-close-hover-opacity: 1;
 $btn-close-disabled-opacity: 0.75;
 
 // ngbAccordion variables
-$accordion-bg: $night;
+$accordion-bg: $eerieBlack;
 $accordion-color: $whiteSmoke;
 $accordion-button-color: $whiteSmoke;
 
-$accordion-button-active-bg: $night;
+$accordion-button-active-bg: $eerieBlack;
 $accordion-button-active-color: $whiteSmoke;
 
 $accordion-border-color: $mint;
@@ -25,6 +25,16 @@ $accordion-button-focus-box-shadow: 0px 0px 10px 1px
 
 $accordion-button-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$whiteSmoke}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
 $accordion-button-active-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$jasmine}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+
+// ngTemplate modal variables
+$modal-content-color: $whiteSmoke;
+$modal-content-bg: $eerieBlack;
+$modal-content-border-color: $mint;
+
+// bootstrap form varibales
+$input-group-addon-color: $whiteSmoke;
+$input-group-addon-bg: transparent;
+$input-group-addon-border-color: $jasmine;
 
 @import "bootstrap/scss/bootstrap";
 
@@ -111,7 +121,7 @@ a {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: rgba($color: #000000, $alpha: 0.15);
+  background-color: transparent;
 }
 
 /* Handle */

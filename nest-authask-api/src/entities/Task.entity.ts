@@ -29,7 +29,7 @@ export class Task {
   @Column() // not nullable, however the user may not provide it, and so it will be generated automatically at the instant of the registration, but he can change it later
   startsAt: Date;
 
-  @Column({ nullable: true }) // optional
+  @Column() // same as startsAt
   endsAt: Date;
 
   @CreateDateColumn({ type: 'timestamp' }) // this one is generated automatically at the instant of the registration and cannot be changed, it just stores the moment when the task was created, and not when the task was started
