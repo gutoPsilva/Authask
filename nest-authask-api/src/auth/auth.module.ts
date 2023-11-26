@@ -9,9 +9,13 @@ import { UsersModule } from 'src/users/users.module';
 import { SessionSerializer } from './utils/SessionSerializer';
 import { LocalStrategy } from './utils/Strategy/LocalStrategy';
 import { DiscordStrategy } from './utils/Strategy/DiscordStrategy';
+import { PassTokens } from 'src/entities/PassTokens.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LocalUser, DiscordUser]), UsersModule], // importar as duas tabelas para fazer as ações de AUTENTICAÇÃo no banco de dados
+  imports: [
+    TypeOrmModule.forFeature([LocalUser, DiscordUser, PassTokens]),
+    UsersModule,
+  ], // importar as duas tabelas para fazer as ações de AUTENTICAÇÃo no banco de dados
   controllers: [AuthController],
   providers: [
     {

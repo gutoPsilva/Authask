@@ -3,11 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LocalUser } from './entities/LocalUser.entity';
 import { DiscordUser } from './entities/DiscordUser.entity';
 import { Task } from './entities/Task.entity';
+import { PassTokens } from './entities/PassTokens.entity';
+import { Session } from './entities/Session.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
-import { Session } from './entities/Session.entity';
 import { TasksModule } from './tasks/tasks.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -18,13 +20,14 @@ import { TasksModule } from './tasks/tasks.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [LocalUser, DiscordUser, Task, Session],
+      entities: [LocalUser, DiscordUser, Task, Session, PassTokens],
       synchronize: true,
     }),
     UsersModule,
     AuthModule,
     TasksModule,
     PassportModule.register({ session: true }),
+    EmailModule,
   ],
   controllers: [],
   providers: [],

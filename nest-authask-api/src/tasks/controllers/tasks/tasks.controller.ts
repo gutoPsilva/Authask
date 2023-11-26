@@ -62,4 +62,12 @@ export class TasksController {
       req.user as LocalUser | DiscordUser,
     );
   }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('/stats')
+  async getStats(@Req() req: Request) {
+    return await this.tasksService.getStats(
+      req.user as LocalUser | DiscordUser,
+    );
+  }
 }

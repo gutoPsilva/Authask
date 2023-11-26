@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
-  AuthenticatedUser,
   DiscordUser,
   IUserLogin,
   LocalUser,
   IRegisterLocalUser,
   UserLogoutMsg,
+  ResetUserPass,
 } from 'src/interfaces/auth.interface';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 
@@ -70,15 +70,15 @@ export class AuthService {
     }
   }
 
-  setUser(user: AuthenticatedUser | null) {
+  setUser(user: LocalUser | DiscordUser | null) {
     this.userSubject.next(user);
     if (user) {
-      const expirationDate = new Date().getTime() + (1000 * 60 * 60 * 4); // after setting the user, 4 hours later the cookie and the localStorage must be destroyed
+      const expirationDate = new Date().getTime() + 1000 * 60 * 60 * 4; // after setting the user, 4 hours later the cookie and the localStorage must be destroyed
       localStorage.setItem('user', JSON.stringify({ user, expirationDate }));
     } else localStorage.removeItem('user');
   }
 
-  getUser(): Observable<AuthenticatedUser | null> {
+  getUser(): Observable<LocalUser | DiscordUser | null> {
     return this.userSubject.asObservable();
   }
 
@@ -87,6 +87,11 @@ export class AuthService {
     return this.http
       .delete<UserLogoutMsg>(url, { withCredentials: true })
       .pipe(catchError(this.handleError));
+  }
+
+  resetPassword(resetDetails: ResetUserPass) {
+    const url = this.apiURL + 'reset-password';
+    return this.http.post(url, resetDetails).pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {

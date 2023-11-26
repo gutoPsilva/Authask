@@ -47,14 +47,14 @@ export class LoginComponent {
     return this.loginForm.get('password');
   }
 
-  async onSubmit() {
+  onSubmit() {
     if (this.loginForm.valid) {
       this.alertService.showLoadingAlert(
         'Logging in user, please wait a moment...'
       );
       this.loginError = ''; // always reset the error when submitted, so the user can notice he made a mistake again
 
-      await this.authService.login(this.loginForm.value).subscribe({
+      this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
           this.authService.setUser(res);
           console.log(this.authService.getUser());
@@ -69,11 +69,11 @@ export class LoginComponent {
     }
   }
 
-  async signinWithDiscord() {
+  signinWithDiscord() {
     this.alertService.showLoadingAlert(
       'Please grant authorization and await login through Discord...'
     );
-    await this.authService.signin().subscribe({
+    this.authService.signin().subscribe({
       next: (res) => {
         this.authService.setUser(res);
         this.loginError = '';
@@ -86,6 +86,10 @@ export class LoginComponent {
         this.alertService.showLoadingAlert('');
       },
     });
+  }
+
+  redirectFgt() {
+    this.router.navigate(['/forgot-password']);
   }
 
   togglePassword(event?: KeyboardEvent) {

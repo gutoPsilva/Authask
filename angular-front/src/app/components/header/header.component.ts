@@ -30,12 +30,12 @@ export class HeaderComponent {
     this.menuActive = !this.menuActive;
   }
 
-  async logout() {
+  logout() {
     if (this.user) {
       this.alertService.showLoadingAlert(
         'Logging out, please wait a moment...'
       );
-      await this.authService.logout().subscribe((res) => {
+      this.authService.logout().subscribe((res) => {
         console.log(res);
         this.alertService.showLoadingAlert('');
 
@@ -43,7 +43,7 @@ export class HeaderComponent {
           this.authService.setUser(null);
           localStorage.removeItem('user'); // remove storage, since the session is now destroyed
           
-          this.router.navigate(['/login']);
+          this.router.navigate(['/home']);
         } else {
           this.alertService.showAlert('Error logging out.');
         }

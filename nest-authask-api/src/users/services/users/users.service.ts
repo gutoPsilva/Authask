@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ResetLocalPass } from 'src/auth/dtos/ResetLocalPass.dto';
 import { DiscordUser } from 'src/entities/DiscordUser.entity';
 import { LocalUser } from 'src/entities/LocalUser.entity';
+import { PassTokens } from 'src/entities/PassTokens.entity';
 import {
   DiscordUserDetails,
   LocalUserDetails,
@@ -16,6 +18,8 @@ export class UsersService {
     private localUserRepository: Repository<LocalUser>,
     @InjectRepository(DiscordUser)
     private discordUserRepository: Repository<DiscordUser>,
+    @InjectRepository(PassTokens)
+    private tokensRepository: Repository<PassTokens>,
   ) {}
 
   async findLocalUser(criteria: Partial<LocalUser>): Promise<LocalUser> {
@@ -83,5 +87,36 @@ export class UsersService {
   ): Promise<DiscordUser> {
     const newUser = this.discordUserRepository.create(discordDetails);
     return await this.discordUserRepository.save(newUser);
+  }
+
+  async resetPassword(resetDto: ResetLocalPass) {
+    const { token, password } = resetDto;
+    const tokenDB = await this.tokensRepository.findOneBy({ token });
+
+    if (!tokenDB) {
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+    }
+
+    if (tokenDB.used) {
+      throw new HttpException(
+        'Token already used or you requested a new one after this',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (tokenDB.expires < new Date(Date.now())) {
+      throw new HttpException('Token expired', HttpStatus.BAD_REQUEST);
+    }
+
+    const user = await this.localUserRepository.findOneBy({
+      email: tokenDB.email,
+    });
+
+    user.password = await hashPassword(password);
+    await this.localUserRepository.save(user);
+
+    tokenDB.used = true;
+    await this.tokensRepository.save(tokenDB);
+    return { message: 'Password changed successfully' };
   }
 }

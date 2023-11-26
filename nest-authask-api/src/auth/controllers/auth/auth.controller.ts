@@ -16,6 +16,7 @@ import {
 } from 'src/auth/utils/Guards/UnifiedGuards';
 import { UsersService } from 'src/users/services/users/users.service';
 import { Request } from 'express';
+import { ResetLocalPass } from 'src/auth/dtos/ResetLocalPass.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -68,5 +69,10 @@ export class AuthController {
         loggedOut: false,
       };
     }
+  }
+
+  @Post('reset-password')
+  resetPass(@Body() resetLocalPassDto: ResetLocalPass) {
+    return this.userService.resetPassword(resetLocalPassDto);
   }
 }

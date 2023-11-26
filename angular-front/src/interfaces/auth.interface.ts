@@ -33,3 +33,8 @@ export interface UserLogoutMsg {
   message: string;
   loggedOut: boolean;
 }
+
+export interface ResetUserPass {
+  token: string;
+  password: string;
+}

@@ -6,13 +6,34 @@ import { PageNotFoundComponent } from './components/pages/page-not-found/page-no
 import { TaskListComponent } from './components/pages/task-list/task-list.component';
 import { AuthenticatedGuard, NotAuthenticatedGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/pages/home/home.component';
+import { ForgotPasswordComponent } from './components/pages/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'login', component: LoginComponent, canActivate: [NotAuthenticatedGuard] }, // cannot be accessed when logged in
-  { path: 'task-list', component: TaskListComponent, canActivate: [AuthenticatedGuard] }, // cannot be accessed when logged out
-  { path: 'sign-up', component: SignUpComponent, canActivate: [NotAuthenticatedGuard] },
-  { path: '404-page-not-found', component: PageNotFoundComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [NotAuthenticatedGuard],
+  }, // cannot be accessed when logged in
+  {
+    path: 'sign-up',
+    component: SignUpComponent,
+    canActivate: [NotAuthenticatedGuard],
+  },
+  {
+    path: 'task-list',
+    component: TaskListComponent,
+    canActivate: [AuthenticatedGuard],
+  }, // cannot be accessed when logged out
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+    canActivate: [NotAuthenticatedGuard],
+  },
+  {
+    path: '404-page-not-found',
+    component: PageNotFoundComponent,
+  },
   { path: '**', redirectTo: '404-page-not-found' },
 ];
 

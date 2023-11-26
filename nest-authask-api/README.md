@@ -67,8 +67,8 @@ To log out the authenticated user, simply access the `/auth/logout` endpoint usi
 
 ```json
 { 
-  message: 'Logged out successfully',
-  loggedOut: true,
+  "message": "Logged out successfully",
+  "loggedOut": true,
 }
 ```
 
@@ -76,12 +76,40 @@ In the event that there is no authenticated user to log out, the response will b
 
 ```json
 { 
-  message: 'Failed to logout',
-  loggedOut: false,
+  "message": "Failed to logout",
+  "loggedOut": false,
 }
 ```
 
 Please be aware that each session has a maximum duration of 4 hours. Every time you log in, a new session is created. Additionally, if there is another active session for the same client, it will be destroyed upon your login. Also when you logout the session cookie is destroyed.
+
+### **Forgot Password**
+
+In case you forgot your local account password, you can access the endpoint `email/send-token` with POST method, providing in the body the registered email from your account.
+
+If the email isn't from any user on the local DB, you'll receive a Http Error with invalid credentials. Else, you'll receive a message saying that a token was sent to your email.
+
+**NOTICE** that each token expires after 10 minutes, after that you'll need to request a new token.
+
+After receiving the email, access the endpoint `auth/reset-password` with POST method, in the body you should provide:
+
+```json
+{
+  "password": string,
+  "token": string
+}
+```
+
+- The password must respect the same rules implied while creating a user.
+- The token is just the token you received on your email.
+
+If the token and the new password are valid, you will receive a message.
+
+```json
+{ 
+  "message": "Password changed successfully" 
+}
+```
 
 ### **After authenticaion**
 
@@ -94,10 +122,10 @@ To get all the tasks from the authenticated user, access the endpoint `/tasks` w
   "id": number,
   "title": string,
   "description": string,
-  "status": 'OPEN' | 'IN_PROGRESS | 'DONE',
+  "status": "OPEN" | "IN_PROGRESS" | "DONE",
   "urgent": boolean,
   "startsAt": Date,
-  "endsAt": Date | null,
+  "endsAt": Date,
   "createdAt": Date,
 }
 ```
@@ -115,7 +143,7 @@ In order to create a task, access the endpoint `/tasks` with a POST method an ob
   "status": 'OPEN' | 'IN_PROGRESS | 'DONE',
   "urgent": boolean,
   "startsAt": Date | null,
-  "endsAt": Date,
+  "endsAt": Date | null,
 }
 ```
 
@@ -215,6 +243,8 @@ I used dotenv to setup the environment variables. Create a '.env' file in the ro
 - DB_PASS
 - DB_NAME
 - CLIENT_ORIGIN_URL
+- EMAIL_USER
+- EMAIL_PASS
 
 CLIENT_ORIGIN_URL is the base origin of the client, in my case i'm using angular so it's ``http://localhost:4200``.
 
@@ -225,6 +255,8 @@ require('crypto').randomBytes(64).toString('hex');
 ```
 
 Copy the value it returns and paste it into the SESSION_SECRET variable.
+
+`EMAIL_USER` and `EMAIL_PASS` are related to the email account that will send the tokens when a local user forgets a password. YOU MUST USE A **OUTLOOK** ACCOUNT HERE IN ORDER TO WORK, i recommend creating a new account just for testing purposes here, do not use your personal account.
 
 ### 4 - Setup Discord Application
 
@@ -260,6 +292,7 @@ If you've followed all the steps correctly, simply execute the command `npm run 
 - [MySQL](https://www.mysql.com/)
 - [dotenv](https://www.npmjs.com/package/dotenv)
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
+- [Nodemailer](https://nodemailer.com/)
 - [Discord for Developers](https://discord.com/developers)
 - [GitHub Copilot](https://github.com/features/copilot)
 

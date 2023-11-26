@@ -1,8 +1,38 @@
-<section>
+<section class='centered-section'>
   <article class="welcome-container">
     <h2>
       Welcome, <span>{{ user?.username || "anonymous" }}</span>
     </h2>
+    <div *ngIf="!user">
+      <p class="description">
+        This is a simple task manager application built with <span class="angular">Angular</span>, <span class="nest">NestJS</span> and
+        <span class="mysql">MySQL</span>. You can create an account and manage your tasks as a local user
+        from the database or as an discord user from the discord api.
+      </p>
+    </div>
+    <div *ngIf="user">
+      <p class="description">
+        Now that you're logged in, let's check up on your stats.
+      </p>
+      <div class="stats-container">
+        <div class="stats-block">
+          <h3>Total Tasks</h3>
+          <p>{{ userStats?.totalTasks }}</p>
+        </div>
+        <div class="stats-block">
+          <h3>Completed Tasks</h3>
+          <p>{{ userStats?.doneTasks }}</p>
+        </div>
+        <div class="stats-block">
+          <h3>In Progress Tasks</h3>
+          <p>{{ userStats?.inProgressTasks }}</p>
+        </div>
+        <div class="stats-block">
+          <h3>Open Tasks</h3>
+          <p>{{ userStats?.openTasks }}</p>
+        </div>
+      </div>
+    </div>
   </article>
   <button
     class="btn-manage"

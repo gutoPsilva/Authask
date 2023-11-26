@@ -156,4 +156,24 @@ export class TasksService {
       return err;
     }
   }
+
+  async getStats(user: LocalUser | DiscordUser) {
+    const tasks = await this.allUserTasks(user);
+
+    const totalTasks = tasks.length;
+    const openTasks = tasks.filter((task) => task.status === 'OPEN').length;
+    const inProgressTasks = tasks.filter(
+      (task) => task.status === 'IN_PROGRESS',
+    ).length;
+    const doneTasks = tasks.filter((task) => task.status === 'DONE').length;
+    const urgentTasks = tasks.filter((task) => task.urgent).length;
+
+    return {
+      totalTasks,
+      openTasks,
+      inProgressTasks,
+      doneTasks,
+      urgentTasks,
+    };
+  }
 }

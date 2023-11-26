@@ -21,6 +21,14 @@ export interface ITaskInfo {
   endsAt: Date;
 }
 
+export interface ITaskStats {
+  totalTasks: number;
+  openTasks: number;
+  inProgressTasks: number;
+  doneTasks: number;
+  urgentTasks: number;
+}
+
 export interface IFilters {
   "OPEN": boolean,
   "IN_PROGRESS": boolean,

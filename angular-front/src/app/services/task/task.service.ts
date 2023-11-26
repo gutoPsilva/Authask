@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
-import { ITask, ITaskInfo } from 'src/interfaces/tasks.interface';
+import { Observable, catchError, throwError } from 'rxjs';
+import { ITask, ITaskInfo, ITaskStats } from 'src/interfaces/tasks.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +35,10 @@ export class TaskService {
     return this.http
       .delete<boolean>(this.apiURL + id, { withCredentials: true })
       .pipe(catchError(this.handleError)); // it needs the credentials to check the session.id and the req.user :)
+  }
+
+  userTaskStats(): Observable<ITaskStats>{
+    return this.http.get<ITaskStats>(this.apiURL + 'stats', { withCredentials: true });
   }
 
   private handleError(error: HttpErrorResponse) {
