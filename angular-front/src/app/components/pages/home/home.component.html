@@ -1,43 +1,92 @@
-<section class='centered-section'>
+<section class="centered-section">
   <article class="welcome-container">
     <h2>
       Welcome, <span>{{ user?.username || "anonymous" }}</span>
     </h2>
     <div *ngIf="!user">
       <p class="description">
-        This is a simple task manager application built with <span class="angular">Angular</span>, <span class="nest">NestJS</span> and
-        <span class="mysql">MySQL</span>. You can create an account and manage your tasks as a local user
-        from the database or as an discord user from the discord api.
+        This is a simple task manager application built with <span class="angular">Angular</span>, <span class="nest">NestJS</span> and <span class="mysql">MySQL</span>. You can create an account and manage your tasks as a local user from the database or as an discord user from the discord api.
       </p>
     </div>
     <div *ngIf="user">
       <p class="description">
-        Now that you're logged in, let's check up on your stats.
+        You currently have <span class="jasmine">{{ userStats?.totalTasks }}</span> tasks in total. Here are some stats about them:
       </p>
       <div class="stats-container">
-        <div class="stats-block">
-          <h3>Total Tasks</h3>
-          <p>{{ userStats?.totalTasks }}</p>
+        <div class="card">
+          <img
+            src="../../../../assets/jan-kronies-fNCT47HnlNE-unsplash.jpg"
+            class="card-img-top"
+            alt="Mountain"
+            title="No specific reason for a mountain image, I just like them xD"
+          />
+          <div class="card-body">
+            <h3 class="card-title">Completed Tasks</h3>
+            <p class="card-text">
+              You have completed
+              <span class="jasmine">{{ userStats?.doneTasks }} </span> tasks.
+              Great job! Keep up the good work and continue to complete your
+              tasks.
+            </p>
+          </div>
         </div>
-        <div class="stats-block">
-          <h3>Completed Tasks</h3>
-          <p>{{ userStats?.doneTasks }}</p>
+        <div class="card">
+          <img
+            src="../../../../assets/pexels-eberhard-grossgasteiger-1421903.jpg"
+            class="card-img-top"
+            alt="Mountain"
+            title="No specific reason for a mountain image, I just like them xD"
+          />
+          <div class="card-body">
+            <h3 class="card-title">In Progress Tasks</h3>
+            <p class="card-text">
+              You have
+              <span class="jasmine">{{ userStats?.inProgressTasks }} </span>
+              tasks in progress. These are tasks that you have started but not
+              yet completed. Keep up the good work!
+            </p>
+          </div>
         </div>
-        <div class="stats-block">
-          <h3>In Progress Tasks</h3>
-          <p>{{ userStats?.inProgressTasks }}</p>
+        <div class="card">
+          <img
+            src="../../../../assets/pexels-drift-shutterbug-2085998.jpg"
+            class="card-img-top"
+            alt="Mountain"
+            title="No specific reason for a mountain image, I just like them xD"
+          />
+          <div class="card-body">
+            <h3 class="card-title">Open Tasks</h3>
+            <p class="card-text">
+              You have
+              <span class="jasmine">{{ userStats?.openTasks }} </span> open
+              tasks. These are tasks that you have not yet started. Start
+              working on these tasks to make progress on your task list.
+            </p>
+          </div>
         </div>
-        <div class="stats-block">
-          <h3>Open Tasks</h3>
-          <p>{{ userStats?.openTasks }}</p>
+        <div class="card">
+          <img
+            src="../../../../assets/john-towner-JgOeRuGD_Y4-unsplash.jpg"
+            class="card-img-top"
+            alt="Mountain"
+            title="No specific reason for a mountain image, I just like them xD"
+          />
+          <div class="card-body">
+            <h3 class="card-title">Urgent Tasks</h3>
+            <p class="card-text">
+              From all your tasks, <span class="jasmine">{{ userStats?.urgentTasks }}</span> of them are urgent. These are tasks that need your immediate attention.
+              Prioritize these tasks to ensure they are completed on time.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </article>
   <button
-    class="btn-manage"
+    class="btn-manage mt-3"
     (click)="user ? manageTasksRedirect() : loginRedirect()"
   >
     {{ user ? "Manage Tasks" : "Login Now" }}
   </button>
 </section>
+

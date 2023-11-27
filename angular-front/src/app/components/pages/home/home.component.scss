@@ -56,35 +56,14 @@ section {
 .stats-container {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 4rem;
+  gap: 3rem;
 
   @media (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   @media (min-width: 1024px) {
     grid-template-columns: repeat(4, 1fr);
-  }
-
-  @media (min-width: 1536px) {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
-  .stats-block {
-    color: $whiteSmoke;
-    text-align: center;
-    border: 1px solid $mint;
-    border-radius: 0.25em;
-    padding: 1rem;
-    aspect-ratio: 1;
-
-    h3 {
-      font-size: 1rem;
-    }
   }
 }
 
@@ -126,6 +105,14 @@ section {
   .welcome-container {
     text-align: center;
   }
+}
+
+.jasmine {
+  color: $jasmine;
+}
+
+.card-img-top {
+  border-bottom: 1px solid $mint;
 }
 
 .angular {

@@ -36,6 +36,11 @@ $input-group-addon-color: $whiteSmoke;
 $input-group-addon-bg: transparent;
 $input-group-addon-border-color: $jasmine;
 
+// bootstrap cards variables
+$card-bg: $eerieBlack;
+$card-border-color: $mint;
+$card-color: $whiteSmoke;
+
 @import "bootstrap/scss/bootstrap";
 
 *,

@@ -1,8 +1,12 @@
-# AUTHASK - WIP
+# AUTHASK [![wakatime](https://wakatime.com/badge/user/85176da2-5693-48f2-919e-a12ba6fc4b88/project/018bbada-cbcc-4600-826b-78e7e1863006.svg)](https://wakatime.com/badge/user/85176da2-5693-48f2-919e-a12ba6fc4b88/project/018bbada-cbcc-4600-826b-78e7e1863006)
 
-This is an Authentication web application with a task managment for each user. ```It is currently under development```.
+This is an Authentication web application with a task managment for each user.
 
 To use the app, users must first create an account and log in, OR, sign in with Discord. Once authenticated, they can create, view, update, and delete their own task lists from a local SQL database.
+
+Also, you can check more details about this project API at `nest-authask-api/README.md`, and i still have to record two videos (desktop & mobile) showing the front-end consuming the API at `angular-front/README.md`.
+
+If you think you found any error or bug on my code please contact me, this project was intended to be only for learning purposes.
 
 ## Main Frameworks, Database & Tools
 
