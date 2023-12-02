@@ -14,10 +14,11 @@
           id="username"
           placeholder="username"
           formControlName="username"
+          autocomplete="off"
           required
         />
         <label
-          for="usernameInput"
+          for="username"
           class="form-label"
           aria-placeholder="username"
           >Username</label
@@ -43,6 +44,7 @@
           id="email"
           placeholder="email"
           formControlName="email"
+          autocomplete="on"
           required
         />
         <label for="email" class="form-label" aria-placeholder="email"
@@ -70,6 +72,7 @@
           type="{{ showPassword ? 'text' : 'password' }}"
           id="password"
           placeholder="password"
+          autocomplete="off"
           required
           title="U can't copy/paste this input >:["
         />
@@ -107,6 +110,7 @@
           type="{{ showCpassword ? 'text' : 'password' }}"
           id="confirmPassword"
           placeholder="Confirm Password"
+          autocomplete="off"
           required
           title="U can't copy/paste this input >:("
         />

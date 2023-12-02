@@ -14,10 +14,8 @@ export class PermissionsService {
   private user: AuthenticatedUser | null = null;
 
   canActivate(): boolean {
-    this.authService.user.subscribe((user) => {
-      console.log(user);
-      this.user = user;
-    });
+    this.authService.user.subscribe(user => this.user = user
+    );
 
     if (this.user) return true;
     else {
@@ -38,10 +36,7 @@ export class LoggedOutPermissionsService {
   private user: AuthenticatedUser | null = null;
 
   canActivate(): boolean {
-    this.authService.user.subscribe((user) => {
-      console.log(user);
-      this.user = user;
-    });
+    this.authService.user.subscribe((user) => this.user = user);
 
     if (!this.user) return true;
     else {

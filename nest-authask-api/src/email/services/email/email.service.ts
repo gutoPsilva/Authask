@@ -39,7 +39,6 @@ export class EmailService {
 
   async sendResetToken(email: string) {
     const userDB = await this.userService.findLocalUser({ email });
-    console.log(userDB);
 
     if (!userDB) {
       // it'll throw a new error anyway, but it's better to be explicit

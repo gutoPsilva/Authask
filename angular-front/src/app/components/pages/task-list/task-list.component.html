@@ -1,12 +1,18 @@
 <section>
   <article class="top-container">
     <div class="search-bar-container">
-      <input type="search" [(ngModel)]="searchString" (ngModelChange)="searchTasks()" placeholder="Search Tasks" />
+      <input
+        name="search"
+        type="search"
+        [(ngModel)]="searchString"
+        (ngModelChange)="searchTasks()"
+        placeholder="Search Tasks"
+      />
     </div>
     <div class="filter-group">
       <div class="dropdown dropdown-sort">
         <div
-          [ngClass]="sortByMenu ? 'select-clicked' : ''"
+          [ngClass]="{ 'select-clicked': sortByMenu }"
           (click)="toggleSortMenu()"
           (keydown.enter)="toggleSortMenu()"
           class="select"
@@ -48,13 +54,20 @@
         </ul>
       </div>
       <div class="dropdown dropdown-filter">
-        <div class="select" [ngClass]="filterMenu ? 'select-clicked' : ''" tabindex="0" (keydown.enter)="toggleFilterMenu()" title="Apply Filters" (click)="toggleFilterMenu()">
+        <div
+          class="select"
+          [ngClass]="{ 'select-clicked': filterMenu }"
+          tabindex="0"
+          (keydown.enter)="toggleFilterMenu()"
+          title="Apply Filters"
+          (click)="toggleFilterMenu()"
+        >
           <fa-icon [icon]="filterIcon"></fa-icon>
         </div>
         <ul *ngIf="filterMenu" class="menu">
           <li
             tabindex="0"
-            [ngClass]="filtersSelected.OPEN ? 'open' : ''"
+            [ngClass]="{ open: filtersSelected.OPEN }"
             (click)="setFilters('OPEN')"
             (keydown.enter)="setFilters('OPEN')"
           >
@@ -62,7 +75,7 @@
           </li>
           <li
             tabindex="0"
-            [ngClass]="filtersSelected.IN_PROGRESS ? 'in-progress' : ''"
+            [ngClass]="{ 'in-progress': filtersSelected.IN_PROGRESS }"
             (click)="setFilters('IN_PROGRESS')"
             (keydown.enter)="setFilters('IN_PROGRESS')"
           >
@@ -70,7 +83,7 @@
           </li>
           <li
             tabindex="0"
-            [ngClass]="filtersSelected.DONE ? 'completed' : ''"
+            [ngClass]="{ completed: filtersSelected.DONE }"
             (click)="setFilters('DONE')"
             (keydown.enter)="setFilters('DONE')"
           >
@@ -90,7 +103,7 @@
   </article>
 
   <article class="tasks-container" *ngIf="taskList.length > 0">
-    <div class="task" ngbAccordion *ngFor="let task of filteredTaskList">
+    <div class="task" ngbAccordion *ngFor="let task of filteredTaskList; let i = index" [ngStyle]="{'--i': i}">
       <span *ngIf="task.urgent" class="dot" title="Urgent"></span>
       <div ngbAccordionItem [collapsed]="true">
         <h2 ngbAccordionHeader>
@@ -144,7 +157,9 @@
       <!-- BOOTSTRAP MODAL for DELETE -->
       <ng-template #contentDelete let-modal>
         <div class="modal-header custom-border">
-          <h4 class="modal-title" id="modal-title"><strong>Task deletion</strong></h4>
+          <h4 class="modal-title" id="modal-title">
+            <strong>Task deletion</strong>
+          </h4>
           <button
             type="button"
             class="btn-close"
@@ -247,79 +262,84 @@
                 Description max length is 255 characters
               </p>
             </div>
-            <div class="radio-group mt-2">
-              <span>Task Status:</span>
-              <div class="form-check">
+            <div class="middle-container">
+              <div class="radio-group mt-2">
+                <span>Task Status:</span>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="status"
+                    formControlName="status"
+                    value="OPEN"
+                    [value]="'OPEN'"
+                    id="flexRadioDefault1"
+                  />
+                  <label class="form-check-label open" for="flexRadioDefault1">
+                    OPEN
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="status"
+                    formControlName="status"
+                    value="IN_PROGRESS"
+                    [value]="'IN_PROGRESS'"
+                    id="flexRadioDefault2"
+                  />
+                  <label
+                    class="form-check-label in-progress"
+                    for="flexRadioDefault2"
+                  >
+                    IN_PROGRESS
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="status"
+                    formControlName="status"
+                    value="DONE"
+                    [value]="'DONE'"
+                    id="flexRadioDefault3"
+                  />
+                  <label
+                    class="form-check-label completed"
+                    for="flexRadioDefault3"
+                  >
+                    DONE
+                  </label>
+                </div>
+              </div>
+              <div class="form-check mt-2">
                 <input
                   class="form-check-input"
-                  type="radio"
-                  name="status"
-                  formControlName="status"
-                  value="OPEN"
-                  [value]="'OPEN'"
-                  id="flexRadioDefault1"
+                  type="checkbox"
+                  formControlName="urgent"
+                  id="defaultCheck1"
                 />
-                <label class="form-check-label open" for="flexRadioDefault1">
-                  OPEN
+                <label class="form-check-label" for="defaultCheck1">
+                  Urgent
                 </label>
               </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="status"
-                  formControlName="status"
-                  value="IN_PROGRESS"
-                  [value]="'IN_PROGRESS'"
-                  id="flexRadioDefault2"
-                />
-                <label
-                  class="form-check-label in-progress"
-                  for="flexRadioDefault2"
-                >
-                  IN_PROGRESS
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="status"
-                  formControlName="status"
-                  value="DONE"
-                  [value]="'DONE'"
-                  id="flexRadioDefault3"
-                />
-                <label
-                  class="form-check-label completed"
-                  for="flexRadioDefault3"
-                >
-                  DONE
-                </label>
-              </div>
-            </div>
-            <div class="form-check mt-2">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                formControlName="urgent"
-                id="defaultCheck1"
-              />
-              <label class="form-check-label" for="defaultCheck1">
-                Urgent
-              </label>
             </div>
             <div class="input-group mt-2" formGroupName="startsAt">
               <span class="input-group-text w-87">Starts at:</span>
               <input
                 type="text"
+                name="startDate"
                 aria-label="StartDate"
+                autocomplete="off"
                 class="form-control"
                 formControlName="startDate"
                 placeholder="YYYY-MM-DD"
               />
               <input
                 type="text"
+                name="startHour"
                 aria-label="StartHour"
                 class="form-control"
                 formControlName="startHour"
@@ -352,14 +372,14 @@
               <span class="input-group-text w-87">Ends at: </span>
               <input
                 type="text"
-                aria-label="EndDate"
+                name="endDate"
                 class="form-control"
                 formControlName="endDate"
                 placeholder="YYYY-MM-DD"
               />
               <input
                 type="text"
-                aria-label="EndHour"
+                name="endHour"
                 class="form-control"
                 formControlName="endHour"
                 placeholder="HH:MM"
@@ -407,7 +427,9 @@
   <!-- BOOTSTRAP MODAL for CREATE -->
   <ng-template #contentCreate let-modal>
     <div class="modal-header custom-border">
-      <h4 class="modal-title" id="modal-basic-title"><strong>Creating task</strong></h4>
+      <h4 class="modal-title" id="modal-basic-title">
+        <strong>Creating task</strong>
+      </h4>
       <button
         type="button"
         class="btn-close"
@@ -461,67 +483,70 @@
             Description max length is 255 characters
           </p>
         </div>
-        <div class="radio-group mt-2">
-          <span>Task Status:</span>
-          <div class="form-check">
+        <div class="middle-container">
+          <div class="radio-group mt-2">
+            <span>Task Status:</span>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="cStatus"
+                formControlName="cStatus"
+                value="OPEN"
+                [value]="'OPEN'"
+                id="cflexRadioDefault1"
+              />
+              <label class="form-check-label open" for="cflexRadioDefault1">
+                OPEN
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="cStatus"
+                formControlName="cStatus"
+                value="IN_PROGRESS"
+                [value]="'IN_PROGRESS'"
+                id="cflexRadioDefault2"
+              />
+              <label
+                class="form-check-label in-progress"
+                for="cflexRadioDefault2"
+              >
+                IN_PROGRESS
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="cStatus"
+                formControlName="cStatus"
+                value="DONE"
+                [value]="'DONE'"
+                id="cflexRadioDefault3"
+              />
+              <label class="form-check-label completed" for="cflexRadioDefault3"
+                >DONE</label
+              >
+            </div>
+          </div>
+          <div class="form-check mt-2">
             <input
               class="form-check-input"
-              type="radio"
-              name="cStatus"
-              formControlName="cStatus"
-              value="OPEN"
-              [value]="'OPEN'"
-              id="cflexRadioDefault1"
+              type="checkbox"
+              formControlName="cUrgent"
+              id="defaultCheck2"
             />
-            <label class="form-check-label open" for="cflexRadioDefault1">
-              OPEN
-            </label>
+            <label class="form-check-label " for="defaultCheck2"> Urgent </label>
           </div>
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="cStatus"
-              formControlName="cStatus"
-              value="IN_PROGRESS"
-              [value]="'IN_PROGRESS'"
-              id="cflexRadioDefault2"
-            />
-            <label
-              class="form-check-label in-progress"
-              for="cflexRadioDefault2"
-            >
-              IN_PROGRESS
-            </label>
-          </div>
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="cStatus"
-              formControlName="cStatus"
-              value="DONE"
-              [value]="'DONE'"
-              id="cflexRadioDefault3"
-            />
-            <label class="form-check-label completed" for="cflexRadioDefault3">
-              DONE
-            </label>
-          </div>
-        </div>
-        <div class="form-check mt-2">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            formControlName="cUrgent"
-            id="defaultCheck2"
-          />
-          <label class="form-check-label" for="defaultCheck2"> Urgent </label>
         </div>
         <div class="input-group mt-2" formGroupName="cStartsAt">
           <span class="input-group-text w-87">Starts at:</span>
           <input
             type="text"
+            name="cStartDate"
             aria-label="StartDate"
             class="form-control"
             formControlName="cStartDate"
@@ -529,6 +554,7 @@
           />
           <input
             type="text"
+            name="cStartHour"
             aria-label="StartHour"
             class="form-control"
             formControlName="cStartHour"
@@ -561,6 +587,7 @@
           <span class="input-group-text w-87">Ends at: </span>
           <input
             type="text"
+            name="cEndDate"
             aria-label="EndDate"
             class="form-control"
             formControlName="cEndDate"
@@ -568,6 +595,7 @@
           />
           <input
             type="text"
+            name="cEndHour"
             aria-label="EndHour"
             class="form-control"
             formControlName="cEndHour"
@@ -662,5 +690,12 @@
   <p *ngIf="!fetchingTasks && taskList.length === 0" class="msg-tasks">
     You don't have any tasks, why don't you create one?
   </p>
-  <p *ngIf="!fetchingTasks && filteredTaskList.length === 0 && taskList.length !== 0" class="msg-tasks"> The applied filters doesn't correspond to any existing task.</p>
+  <p
+    *ngIf="
+      !fetchingTasks && filteredTaskList.length === 0 && taskList.length !== 0
+    "
+    class="msg-tasks"
+  >
+    The applied filters doesn't correspond to any existing task.
+  </p>
 </section>

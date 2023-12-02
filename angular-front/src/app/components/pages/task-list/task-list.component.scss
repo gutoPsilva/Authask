@@ -280,9 +280,13 @@
 
 .task {
   position: relative;
+  opacity: 0;
   color: $whiteSmoke;
   overflow: wrap;
   word-break: break-all;
+
+  animation: fadeIn .5s ease-in-out forwards;
+  animation-delay: calc(var(--i) * .1s);
 
   .dot {
     top: -4px;
@@ -433,6 +437,7 @@
   font-weight: bold;
 
   padding: 0.35em 1em;
+  margin-bottom: 6px; // so the accordion-body padding at bottom is equal to the top, since box-shadow 6px makes it look like it's not
   border-radius: 0.25em;
   border: none;
   font-size: 1rem;
@@ -547,7 +552,6 @@
 
 .radio-group {
   display: flex;
-  align-items: center;
   gap: 1em;
 }
 
@@ -577,4 +581,27 @@
 
 .w-87 {
   width: 87px;
+}
+
+.middle-container {
+  margin: .5em 5px .5em 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-check-input {
+  margin-top: 2px;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
 }

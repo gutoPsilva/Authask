@@ -18,7 +18,7 @@ export class EmailService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    console.log(error);
+    console.error(error);
     return throwError(() => error);
   }
 }

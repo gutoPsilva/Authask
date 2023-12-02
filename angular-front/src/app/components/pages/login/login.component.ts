@@ -57,7 +57,6 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
           this.authService.setUser(res);
-          console.log(this.authService.getUser());
           this.alertService.showLoadingAlert('');
           this.router.navigate(['/home']);
         },
@@ -77,7 +76,6 @@ export class LoginComponent {
       next: (res) => {
         this.authService.setUser(res);
         this.loginError = '';
-        console.log(this.authService.getUser());
         this.alertService.showLoadingAlert('');
         this.router.navigate(['/home']);
       },

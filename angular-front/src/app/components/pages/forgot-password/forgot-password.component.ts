@@ -6,6 +6,7 @@ import {
   faEyeSlash,
   faKey,
   faTicket,
+  faArrowDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -17,6 +18,7 @@ import { EmailService } from 'src/app/services/email/email.service';
   styleUrls: ['./forgot-password.component.scss'],
 })
 export class ForgotPasswordComponent {
+  sendingEmail: boolean = false;
   emailError: string = '';
   tokenError: string = '';
   resetForm!: FormGroup;
@@ -26,6 +28,7 @@ export class ForgotPasswordComponent {
   eyeSlash = faEyeSlash;
   ticketIcon = faTicket;
   keyIcon = faKey;
+  arrowIcon = faArrowDown;
 
   showPassword: boolean = false;
   showCpassword: boolean = false;
@@ -77,17 +80,18 @@ export class ForgotPasswordComponent {
 
   sendEmail() {
     if (this.emailForm.valid) {
-      console.log(this.emailForm.value);
-      this.alertService.showLoadingAlert('Sending email...');
+      this.sendingEmail = true;
+      this.alertService.showLoadingAlert(
+        'Sending email... This may take a few seconds.'
+      );
       this.emailService.sendEmail(this.emailForm.value.email).subscribe({
         next: (res) => {
-          console.log(res);
           this.alertService.showLoadingAlert('');
           this.alertService.showAlert('Token sent to your email.');
           this.emailError = '';
+          this.sendingEmail = false;
         },
         error: (err) => {
-          console.log(err);
           if (err.error.message === 'Invalid credentials') {
             this.emailError = 'Email not found.';
           }
@@ -114,15 +118,13 @@ export class ForgotPasswordComponent {
         })
         .subscribe({
           next: (res) => {
-            console.log(res);
             this.alertService.showLoadingAlert('');
-            this.alertService.showAlert('Password resete successfully!');
+            this.alertService.showAlert('Password reseted successfully!');
             this.router.navigate(['/login']);
           },
           error: (err) => {
             this.alertService.showLoadingAlert('');
             this.tokenError = err.error.message;
-            console.log(err);
           },
         });
     }

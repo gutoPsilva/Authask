@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -36,7 +36,6 @@ export class HeaderComponent {
         'Logging out, please wait a moment...'
       );
       this.authService.logout().subscribe((res) => {
-        console.log(res);
         this.alertService.showLoadingAlert('');
 
         if (res.loggedOut) {

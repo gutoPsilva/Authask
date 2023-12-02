@@ -193,7 +193,6 @@ export class TaskListComponent {
   cCompareDates(start: ICSDate, end: ICEDate) {
     const startDate = start.cStartDate + ' ' + start.cStartHour;
     const endDate = end.cEndDate + ' ' + end.cEndHour;
-    console.log(startDate, endDate);
     startDate > endDate
       ? (this.cStartDateAfterEndDate = true)
       : (this.cStartDateAfterEndDate = false);
@@ -203,7 +202,6 @@ export class TaskListComponent {
   uCompareDates(start: IUSDate, end: IUEDate) {
     const startDate = start.startDate + ' ' + start.startHour;
     const endDate = end.endDate + ' ' + end.endHour;
-    console.log(startDate, endDate);
     startDate > endDate
       ? (this.startDateAfterEndDate = true)
       : (this.startDateAfterEndDate = false);
@@ -285,7 +283,6 @@ export class TaskListComponent {
   }
 
   sortBy(sort: sortBy) {
-    console.log(sort);
     this.sortBySelected = sort;
     switch (sort) {
       case 'Recently Added':
@@ -320,7 +317,6 @@ export class TaskListComponent {
   }
 
   loadUpdateFields(task: ITaskInfo) {
-    console.log(task);
     this.taskFormUpdate.patchValue({
       title: task.title,
       description: task.description,
@@ -338,34 +334,26 @@ export class TaskListComponent {
   }
 
   submitUpdate(id: number) {
-    console.log(this.taskFormUpdate.value);
     const startAfterEnd = this.uCompareDates(
       this.taskFormUpdate.value.startsAt,
       this.taskFormUpdate.value.endsAt
     );
 
-    if (this.taskFormUpdate.valid && !startAfterEnd) {
-      console.log('valid');
-      this.updateTask(id);
-    }
+    if (this.taskFormUpdate.valid && !startAfterEnd) this.updateTask(id);
   }
 
   submitCreate() {
-    console.log(this.taskFormCreate.value);
     const startAfterEnd = this.cCompareDates(
       this.taskFormCreate.value.cStartsAt,
       this.taskFormCreate.value.cEndsAt
     );
     if (this.taskFormCreate.valid && !startAfterEnd) {
-      console.log('valid');
       this.createTask();
       this.taskFormCreate.reset();
     }
   }
 
   createTask() {
-    console.log('Creating task...');
-
     const startsAt = this.formatDateTime(
       this.taskFormCreate.value.cStartsAt.cStartDate,
       this.taskFormCreate.value.cStartsAt.cStartHour
@@ -392,31 +380,28 @@ export class TaskListComponent {
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.readTasks();
           this.alertService.showLoadingAlert('');
         },
         error: (err) => {
-          console.log(err);
+          console.error(err);
           this.alertService.showLoadingAlert('');
         },
       });
   }
 
   readTasks() {
-    console.log(this.taskList);
     this.taskService.getTasks().subscribe({
       next: (tasks) => {
         this.fetchingTasks = false;
         this.taskList = tasks;
-        console.log(this.taskList);
         this.filteredTaskList = this.applyFilters();
         if (this.filteredTaskList.length !== 0)
           this.sortBy(this.sortBySelected); // maintain the selected sort :]
       },
       error: (err) => {
         this.fetchingTasks = false;
-        console.log(err);
+        console.error(err);
       },
     });
   }
@@ -437,12 +422,11 @@ export class TaskListComponent {
       .updateTask(id, { ...this.taskFormUpdate.value, startsAt, endsAt })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.readTasks();
           this.alertService.showLoadingAlert('');
         },
         error: (err) => {
-          console.log(err);
+          console.error(err);
           this.alertService.showLoadingAlert('');
         },
       });
@@ -462,10 +446,10 @@ export class TaskListComponent {
       },
       error: (err) => {
         this.alertService.showLoadingAlert('');
-        console.log(err);
+        console.error(err);
       },
     });
-    console.log('Deleting task: ' + id);
+    console.error('Deleting task: ' + id);
   }
 
   deleteAllTasks() {
@@ -479,7 +463,6 @@ export class TaskListComponent {
     forkJoin(deleteObservables).subscribe({
       // after deleting all these observables, it will execute the next function
       next: () => {
-        console.log('all deleted');
         this.readTasks();
         this.alertService.showLoadingAlert('');
       },

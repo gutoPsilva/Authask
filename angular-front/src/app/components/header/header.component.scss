@@ -31,7 +31,7 @@ ul {
   li {
     position: relative;
 
-    a {
+    a, button {
       transition: color 250ms ease-in-out;
 
       &:after {

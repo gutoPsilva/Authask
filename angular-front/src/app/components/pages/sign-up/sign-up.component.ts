@@ -86,7 +86,6 @@ export class SignUpComponent {
 
       this.authService.registerLocalUser(registerInfo).subscribe({
         next: (res) => {
-          console.log(res);
           this.alertService.showAlert(
             // selfClosingAlert in 5secs
             'Account created successfully! Now you can login.'
@@ -100,8 +99,6 @@ export class SignUpComponent {
           if (err.error.message.includes('Email'))
             this.dbUsed.email = err.error.message;
           else this.dbUsed.username = err.error.message;
-
-          console.log(err.error.message);
         },
       });
 

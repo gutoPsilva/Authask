@@ -7,7 +7,6 @@ export class EmailController {
 
   @Post('send-token')
   async sendToken(@Body() body: { email: string }) {
-    console.log(body.email);
     return await this.emailService.sendResetToken(body.email);
   }
 }
