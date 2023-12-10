@@ -35,22 +35,12 @@ export interface IFilters {
   "DONE": boolean,
 }
 
-export interface IUSDate {
+export interface ISDate {
   startDate: string;
   startHour: string;
 }
 
-export interface IUEDate {
+export interface IEDate {
   endDate: string;
   endHour: string;
-}
-
-export interface ICSDate {
-  cStartDate: string;
-  cStartHour: string;
-}
-
-export interface ICEDate {
-  cEndDate: string;
-  cEndHour: string;
 }

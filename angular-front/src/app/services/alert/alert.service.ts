@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ILoadingMessage } from 'src/interfaces/alert.interface';
 
 @Injectable({
   providedIn: 'root',

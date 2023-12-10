@@ -14,16 +14,14 @@ export class HeaderComponent {
   constructor(
     private authService: AuthService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
   ) {}
   lock = faLock;
   user: LocalUser | DiscordUser | null = null;
   menuActive: boolean = false;
 
   ngOnInit(): void {
-    this.authService.user.subscribe((user) => {
-      this.user = user;
-    });
+    this.authService.user.subscribe(user => this.user = user);
   }
 
   toggleMenu() {
@@ -41,7 +39,7 @@ export class HeaderComponent {
         if (res.loggedOut) {
           this.authService.setUser(null);
           localStorage.removeItem('user'); // remove storage, since the session is now destroyed
-          
+
           this.router.navigate(['/home']);
         } else {
           this.alertService.showAlert('Error logging out.');

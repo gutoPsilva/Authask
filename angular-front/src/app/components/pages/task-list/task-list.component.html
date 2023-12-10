@@ -4,6 +4,7 @@
       <input
         name="search"
         type="search"
+        autocomplete="off"
         [(ngModel)]="searchString"
         (ngModelChange)="searchTasks()"
         placeholder="Search Tasks"
@@ -112,7 +113,7 @@
               <p class="title">{{ task.title }}</p>
               <div class="sub-title">
                 <p class="date">
-                  {{ task.startsAt | date : "MMM d, y, h:mm a" }}
+                  {{ task.startsAt | date : "MMM d, y. h:mm a" }}
                 </p>
                 <span
                   class="status"
@@ -133,7 +134,7 @@
               <p>{{ task.description }}</p>
               <p *ngIf="task.endsAt">
                 <strong>Due Date</strong> -
-                {{ task.endsAt | date : "MMM d, y, h:mm a" }}
+                {{ task.endsAt | date : "MMM d, y. h:mm a" }}
               </p>
               <p>
                 <strong>Task Created at</strong> - {{ task.createdAt | date }}
@@ -450,16 +451,16 @@
           <textarea
             class="form-control"
             id="title"
-            formControlName="cTitle"
+            formControlName="title"
             aria-label="Title"
           ></textarea>
         </div>
         <div
           class="wrong-container"
-          *ngIf="cTitle?.invalid && createFormDir.submitted"
+          *ngIf="createTitle?.invalid && createFormDir.submitted"
         >
-          <p *ngIf="cTitle?.errors?.['required']">Title is required</p>
-          <p *ngIf="cTitle?.errors?.['maxlength']">
+          <p *ngIf="createTitle?.errors?.['required']">Title is required</p>
+          <p *ngIf="createTitle?.errors?.['maxlength']">
             Title max length is 255 characters
           </p>
         </div>
@@ -468,18 +469,18 @@
           <textarea
             class="form-control"
             id="description"
-            formControlName="cDescription"
+            formControlName="description"
             aria-label="Description"
           ></textarea>
         </div>
         <div
           class="wrong-container"
-          *ngIf="cDescription?.invalid && createFormDir.submitted"
+          *ngIf="createDescription?.invalid && createFormDir.submitted"
         >
-          <p *ngIf="cDescription?.errors?.['required']">
+          <p *ngIf="createDescription?.errors?.['required']">
             Description is required
           </p>
-          <p *ngIf="cDescription?.errors?.['maxlength']">
+          <p *ngIf="createDescription?.errors?.['maxlength']">
             Description max length is 255 characters
           </p>
         </div>
@@ -490,8 +491,8 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="cStatus"
-                formControlName="cStatus"
+                name="status"
+                formControlName="status"
                 value="OPEN"
                 [value]="'OPEN'"
                 id="cflexRadioDefault1"
@@ -504,8 +505,8 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="cStatus"
-                formControlName="cStatus"
+                name="status"
+                formControlName="status"
                 value="IN_PROGRESS"
                 [value]="'IN_PROGRESS'"
                 id="cflexRadioDefault2"
@@ -521,8 +522,8 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="cStatus"
-                formControlName="cStatus"
+                name="status"
+                formControlName="status"
                 value="DONE"
                 [value]="'DONE'"
                 id="cflexRadioDefault3"
@@ -536,97 +537,97 @@
             <input
               class="form-check-input"
               type="checkbox"
-              formControlName="cUrgent"
+              formControlName="urgent"
               id="defaultCheck2"
             />
             <label class="form-check-label " for="defaultCheck2"> Urgent </label>
           </div>
         </div>
-        <div class="input-group mt-2" formGroupName="cStartsAt">
+        <div class="input-group mt-2" formGroupName="startsAt">
           <span class="input-group-text w-87">Starts at:</span>
           <input
             type="text"
-            name="cStartDate"
+            name="startDate"
             aria-label="StartDate"
             class="form-control"
-            formControlName="cStartDate"
+            formControlName="startDate"
             placeholder="YYYY-MM-DD"
           />
           <input
             type="text"
-            name="cStartHour"
+            name="startHour"
             aria-label="StartHour"
             class="form-control"
-            formControlName="cStartHour"
+            formControlName="startHour"
             placeholder="HH:MM"
           />
         </div>
         <div
           class="wrong-container ml-87"
-          *ngIf="cStartsAt?.invalid && createFormDir.submitted"
+          *ngIf="createStartsAt?.invalid && createFormDir.submitted"
         >
-          <p *ngIf="cStartsAt?.get('cStartDate')?.errors?.['required']">
+          <p *ngIf="createStartsAt?.get('startDate')?.errors?.['required']">
             Start Date is required
           </p>
           <!-- Show invalidDate only if date was provided -->
           <p
-            *ngIf="cStartsAt?.get('cStartDate')?.errors?.['invalidDate'] && !cStartsAt?.get('cStartDate')?.errors?.['required']"
+            *ngIf="createStartsAt?.get('startDate')?.errors?.['invalidDate'] && !createStartsAt?.get('startDate')?.errors?.['required']"
           >
             Invalid date, must be between 1900-01-01 to 2099-12-31
           </p>
-          <p *ngIf="cStartsAt?.get('cStartHour')?.errors?.['required']">
+          <p *ngIf="createStartsAt?.get('startHour')?.errors?.['required']">
             Start Hour is required
           </p>
           <p
-            *ngIf="cStartsAt?.get('cStartHour')?.errors?.['invalidHour'] && !cStartsAt?.get('cStartHour')?.errors?.['required']"
+            *ngIf="createStartsAt?.get('startHour')?.errors?.['invalidHour'] && !createStartsAt?.get('startHour')?.errors?.['required']"
           >
             Invalid hour, must be between 00:00:00 to 23:59:59
           </p>
         </div>
-        <div class="input-group mt-2" formGroupName="cEndsAt">
+        <div class="input-group mt-2" formGroupName="endsAt">
           <span class="input-group-text w-87">Ends at: </span>
           <input
             type="text"
-            name="cEndDate"
+            name="endDate"
             aria-label="EndDate"
             class="form-control"
-            formControlName="cEndDate"
+            formControlName="endDate"
             placeholder="YYYY-MM-DD"
           />
           <input
             type="text"
-            name="cEndHour"
+            name="endHour"
             aria-label="EndHour"
             class="form-control"
-            formControlName="cEndHour"
+            formControlName="endHour"
             placeholder="HH:MM"
           />
         </div>
         <div
           class="wrong-container ml-87"
-          *ngIf="cEndsAt?.invalid && createFormDir.submitted"
+          *ngIf="createEndsAt?.invalid && createFormDir.submitted"
         >
-          <p *ngIf="cEndsAt?.get('cEndDate')?.errors?.['required']">
+          <p *ngIf="createEndsAt?.get('endDate')?.errors?.['required']">
             End Date is required
           </p>
           <!-- Show invalidDate only if date was provided -->
           <p
-            *ngIf="cEndsAt?.get('cEndDate')?.errors?.['invalidDate'] && !cEndsAt?.get('cEndDate')?.errors?.['required']"
+            *ngIf="createEndsAt?.get('endDate')?.errors?.['invalidDate'] && !createEndsAt?.get('endDate')?.errors?.['required']"
           >
             Invalid date, must be between 1900-01-01 to 2099-12-31
           </p>
-          <p *ngIf="cEndsAt?.get('cEndHour')?.errors?.['required']">
+          <p *ngIf="createEndsAt?.get('endHour')?.errors?.['required']">
             End Hour is required
           </p>
           <p
-            *ngIf="cEndsAt?.get('cEndHour')?.errors?.['invalidHour'] && !cEndsAt?.get('cEndHour')?.errors?.['required']"
+            *ngIf="createEndsAt?.get('endHour')?.errors?.['invalidHour'] && !createEndsAt?.get('endHour')?.errors?.['required']"
           >
             Invalid hour, must be between 00:00:00 to 23:59:59
           </p>
         </div>
         <div
           class="wrong-container"
-          *ngIf="createFormDir.submitted && cStartDateAfterEndDate"
+          *ngIf="createFormDir.submitted && createStartDateAfterEndDate"
         >
           Start date must be earlier than end date
         </div>

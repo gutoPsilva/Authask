@@ -1,9 +1,4 @@
 <header>
-  <!-- IDEA TRASH CAN
-  <div class="logo-wrap">
-    <h1 class="logo">Authask</h1>
-  </div> 
-  -->
   <h1>Authask</h1>
   <nav class="desk-nav">
     <ul *ngIf="!user">
@@ -21,18 +16,15 @@
       <li><button (click)="logout()" class="logout-btn">Logout</button></li>
     </ul>
   </nav>
-  <button (click)="toggleMenu()" class="btn-menu">
-    <span [ngClass]="menuActive ? 'bar-1' : ''" class="bar"></span>
-    <span [ngClass]="menuActive ? 'bar-2' : ''" class="bar"></span>
-    <span [ngClass]="menuActive ? 'bar-3' : ''" class="bar"></span>
+  <button [ngClass]="{'fixed-menu': menuActive}" (click)="toggleMenu()" class="btn-menu">
+    <span [ngClass]="{ 'bar-1': menuActive }" class="bar"></span>
+    <span [ngClass]="{ 'bar-2': menuActive }" class="bar"></span>
+    <span [ngClass]="{ 'bar-3': menuActive }" class="bar"></span>
   </button>
-  <article
-    [ngClass]="menuActive ? 'show-cover-screen' : ''"
-    class="cover-screen"
-  >
-    <!-- somente se o menu estiver ativo E se a tela for > 640px-->
+  <article [ngClass]="{ 'show-cover-screen': menuActive }" class="cover-screen">
+    <!-- somente se o menu estiver ativo E se a tela for > 640px -->
   </article>
-  <nav [ngClass]="menuActive ? 'show-mobile-nav' : ''" class="mobile-nav">
+  <nav [ngClass]="{ 'show-mobile-nav': menuActive }" class="mobile-nav">
     <ul *ngIf="!user">
       <li><a routerLink="/home" routerLinkActive="active-link">Home</a></li>
       <li><a routerLink="/login" routerLinkActive="active-link">Login</a></li>

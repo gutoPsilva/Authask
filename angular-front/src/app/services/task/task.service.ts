@@ -13,7 +13,7 @@ export class TaskService {
 
   getTasks(): Observable<ITask[]> {
     return this.http
-      .get<ITask[]>(this.apiURL, { withCredentials: true }) // it needs the credentials to check the session.id and the req.user :)
+      .get<ITask[]>(this.apiURL, { withCredentials: true }) // it needs the credentials to check the session.id and the req.user 
       .pipe(catchError(this.handleError));
   }
 
@@ -34,7 +34,7 @@ export class TaskService {
   deleteTask(id: number): Observable<boolean> {
     return this.http
       .delete<boolean>(this.apiURL + id, { withCredentials: true })
-      .pipe(catchError(this.handleError)); // it needs the credentials to check the session.id and the req.user :)
+      .pipe(catchError(this.handleError)); // it needs the credentials to check the session.id and the req.user 
   }
 
   userTaskStats(): Observable<ITaskStats>{

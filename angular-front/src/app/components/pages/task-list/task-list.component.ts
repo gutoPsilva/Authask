@@ -2,13 +2,11 @@ import { Component } from '@angular/core';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { TaskService } from 'src/app/services/task/task.service';
 import {
-  ICEDate,
-  ICSDate,
+  IEDate,
   IFilters,
+  ISDate,
   ITask,
   ITaskInfo,
-  IUEDate,
-  IUSDate,
   sortBy,
 } from 'src/interfaces/tasks.interface';
 import {
@@ -56,7 +54,7 @@ export class TaskListComponent {
   filterIcon = faFilter;
   faCaretUp = faCaretUp;
 
-  cStartDateAfterEndDate: boolean = false;
+  createStartDateAfterEndDate: boolean = false;
   startDateAfterEndDate: boolean = false;
 
   sortByMenu: boolean = false;
@@ -110,48 +108,42 @@ export class TaskListComponent {
     });
 
     this.taskFormCreate = new FormGroup({
-      cTitle: new FormControl('', [
+      title: new FormControl('', [
         Validators.required,
         Validators.maxLength(255),
       ]),
-      cDescription: new FormControl('', [
+      description: new FormControl('', [
         Validators.required,
         Validators.maxLength(255),
       ]),
-      cStatus: new FormControl('OPEN', [
+      status: new FormControl('OPEN', [
         Validators.required,
         this.statusValidator,
       ]),
-      cUrgent: new FormControl(false, [
+      urgent: new FormControl(false, [
         Validators.required,
         this.booleanValidator,
       ]),
-      cStartsAt: new FormGroup({
-        cStartDate: new FormControl('', [
+      startsAt: new FormGroup({
+        startDate: new FormControl('', [
           Validators.required,
           this.dateValidator,
         ]),
-        cStartHour: new FormControl('', [
+        startHour: new FormControl('', [
           Validators.required,
           this.hourValidator,
         ]),
       }),
-      cEndsAt: new FormGroup({
-        cEndDate: new FormControl('', [
-          Validators.required,
-          this.dateValidator,
-        ]),
-        cEndHour: new FormControl('', [
-          Validators.required,
-          this.hourValidator,
-        ]),
+      endsAt: new FormGroup({
+        endDate: new FormControl('', [Validators.required, this.dateValidator]),
+        endHour: new FormControl('', [Validators.required, this.hourValidator]),
       }),
     });
   }
 
   statusValidator(control: AbstractControl) {
-    const allowedStatuses = ['DONE', 'IN_PROGRESS', 'OPEN'];
-    const isStatusValid = allowedStatuses.includes(control.value);
+    const allowedStatus = ['DONE', 'IN_PROGRESS', 'OPEN'];
+    const isStatusValid = allowedStatus.includes(control.value);
     return isStatusValid ? null : { invalidStatus: { value: control.value } };
   }
 
@@ -163,6 +155,7 @@ export class TaskListComponent {
   dateValidator(control: AbstractControl): { [key: string]: any } | null {
     const datePattern =
       /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+
     if (!datePattern.test(control.value)) {
       return { invalidDate: { value: control.value } };
     }
@@ -190,22 +183,12 @@ export class TaskListComponent {
     return isHourValid ? null : { invalidHour: { value: control.value } };
   }
 
-  cCompareDates(start: ICSDate, end: ICEDate) {
-    const startDate = start.cStartDate + ' ' + start.cStartHour;
-    const endDate = end.cEndDate + ' ' + end.cEndHour;
-    startDate > endDate
-      ? (this.cStartDateAfterEndDate = true)
-      : (this.cStartDateAfterEndDate = false);
-    return startDate > endDate;
-  }
-
-  uCompareDates(start: IUSDate, end: IUEDate) {
+  compareDates(start: ISDate, end: IEDate, op: 'update' | 'create') {
     const startDate = start.startDate + ' ' + start.startHour;
     const endDate = end.endDate + ' ' + end.endHour;
-    startDate > endDate
-      ? (this.startDateAfterEndDate = true)
-      : (this.startDateAfterEndDate = false);
-    return startDate > endDate;
+
+    if (op === 'update') this.startDateAfterEndDate = startDate > endDate;
+    else this.createStartDateAfterEndDate = startDate > endDate;
   }
 
   get title() {
@@ -232,28 +215,28 @@ export class TaskListComponent {
     return this.taskFormUpdate.get('endsAt');
   }
 
-  get cTitle() {
-    return this.taskFormCreate.get('cTitle');
+  get createTitle() {
+    return this.taskFormCreate.get('title');
   }
 
-  get cDescription() {
-    return this.taskFormCreate.get('cDescription');
+  get createDescription() {
+    return this.taskFormCreate.get('description');
   }
 
-  get cStatus() {
-    return this.taskFormCreate.get('cStatus');
+  get createStatus() {
+    return this.taskFormCreate.get('status');
   }
 
-  get cUrgent() {
-    return this.taskFormCreate.get('cUrgent');
+  get createUrgent() {
+    return this.taskFormCreate.get('urgent');
   }
 
-  get cStartsAt() {
-    return this.taskFormCreate.get('cStartsAt');
+  get createStartsAt() {
+    return this.taskFormCreate.get('startsAt');
   }
 
-  get cEndsAt() {
-    return this.taskFormCreate.get('cEndsAt');
+  get createEndsAt() {
+    return this.taskFormCreate.get('endsAt');
   }
 
   formatDateTime(date: string, time: string): Date {
@@ -276,10 +259,9 @@ export class TaskListComponent {
   }
 
   applyFilters() {
-    return this.taskList.filter((task) => {
-      if (this.filtersSelected[task.status]) return task;
-      return;
-    });
+    return this.taskList.filter((task) =>
+      this.filtersSelected[task.status] ? task : null
+    );
   }
 
   sortBy(sort: sortBy) {
@@ -294,17 +276,7 @@ export class TaskListComponent {
         );
         break;
       case 'End Date':
-        this.filteredTaskList.sort((a, b) => {
-          if (a.endsAt === null && b.endsAt === null) {
-            return 0;
-          } else if (a.endsAt === null) {
-            return 1;
-          } else if (b.endsAt === null) {
-            return -1;
-          } else {
-            return a.endsAt >= b.endsAt ? 1 : -1;
-          }
-        });
+        this.filteredTaskList.sort((a, b) => (a.endsAt >= b.endsAt ? 1 : -1));
         break;
       case 'Urgent':
         this.filteredTaskList.sort((a, b) => (a.urgent > b.urgent ? -1 : 1));
@@ -334,40 +306,44 @@ export class TaskListComponent {
   }
 
   submitUpdate(id: number) {
-    const startAfterEnd = this.uCompareDates(
+    this.compareDates(
       this.taskFormUpdate.value.startsAt,
-      this.taskFormUpdate.value.endsAt
+      this.taskFormUpdate.value.endsAt,
+      'update'
     );
 
-    if (this.taskFormUpdate.valid && !startAfterEnd) this.updateTask(id);
+    if (this.taskFormUpdate.valid && !this.startDateAfterEndDate) this.updateTask(id);
   }
 
   submitCreate() {
-    const startAfterEnd = this.cCompareDates(
-      this.taskFormCreate.value.cStartsAt,
-      this.taskFormCreate.value.cEndsAt
+    this.compareDates(
+      this.taskFormCreate.value.startsAt,
+      this.taskFormCreate.value.endsAt,
+      'create'
     );
-    if (this.taskFormCreate.valid && !startAfterEnd) {
+
+    if (this.taskFormCreate.valid && !this.createStartDateAfterEndDate) {
       this.createTask();
       this.taskFormCreate.reset();
+      this.taskFormCreate.patchValue({ cStatus: 'OPEN' }); // for some reason after reseting if i don't patch this value, the radio button won't be selected
     }
   }
 
   createTask() {
     const startsAt = this.formatDateTime(
-      this.taskFormCreate.value.cStartsAt.cStartDate,
-      this.taskFormCreate.value.cStartsAt.cStartHour
+      this.taskFormCreate.value.startsAt.startDate,
+      this.taskFormCreate.value.startsAt.startHour
     );
     const endsAt = this.formatDateTime(
-      this.taskFormCreate.value.cEndsAt.cEndDate,
-      this.taskFormCreate.value.cEndsAt.cEndHour
+      this.taskFormCreate.value.endsAt.endDate,
+      this.taskFormCreate.value.endsAt.endHour
     );
 
     const createInfo = {
-      title: this.taskFormCreate.value.cTitle,
-      description: this.taskFormCreate.value.cDescription,
-      status: this.taskFormCreate.value.cStatus,
-      urgent: this.taskFormCreate.value.cUrgent,
+      title: this.taskFormCreate.value.title,
+      description: this.taskFormCreate.value.description,
+      status: this.taskFormCreate.value.status,
+      urgent: this.taskFormCreate.value.urgent,
     };
 
     this.modalService.dismissAll();
@@ -396,8 +372,7 @@ export class TaskListComponent {
         this.fetchingTasks = false;
         this.taskList = tasks;
         this.filteredTaskList = this.applyFilters();
-        if (this.filteredTaskList.length !== 0)
-          this.sortBy(this.sortBySelected); // maintain the selected sort :]
+        if (this.filteredTaskList.length !== 0) this.sortBy(this.sortBySelected); // maintain the selected sort :]
       },
       error: (err) => {
         this.fetchingTasks = false;
@@ -449,28 +424,30 @@ export class TaskListComponent {
         console.error(err);
       },
     });
-    console.error('Deleting task: ' + id);
   }
 
   deleteAllTasks() {
-    this.alertService.showLoadingAlert('Deleting all tasks...');
     this.modalService.dismissAll(); // closes all open modals :]
 
-    const deleteObservables: Observable<boolean>[] = this.taskList.map((task) =>
-      this.taskService.deleteTask(task.id)
-    );
+    if (this.taskList.length > 0) {
+      this.alertService.showLoadingAlert('Deleting all tasks...');
 
-    forkJoin(deleteObservables).subscribe({
-      // after deleting all these observables, it will execute the next function
-      next: () => {
-        this.readTasks();
-        this.alertService.showLoadingAlert('');
-      },
-      error: (err) => {
-        console.error(err);
-        this.alertService.showLoadingAlert('');
-      },
-    });
+      const deleteObservables: Observable<boolean>[] = this.taskList.map(
+        (task) => this.taskService.deleteTask(task.id)
+      );
+
+      forkJoin(deleteObservables).subscribe({
+        // after deleting all these observables, it will execute the next function
+        next: () => {
+          this.readTasks();
+          this.alertService.showLoadingAlert('');
+        },
+        error: (err) => {
+          console.error(err);
+          this.alertService.showLoadingAlert('');
+        },
+      });
+    } else this.alertService.showAlert('No tasks to delete!');
   }
 
   searchTasks(): void {

@@ -217,7 +217,6 @@
 
 .btn-create-task,
 .btn-delete-tasks {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 1em;
@@ -230,22 +229,10 @@
 
   font-weight: bold;
   transition: all 0.35s ease-in-out;
-  border: 1px solid;
-  border-image-source: linear-gradient(to left, $mint, $jasmine);
-  border-image-slice: 1;
+  border: 1px solid $mint-dark;
 
   @media (min-width: 1024px) {
     margin-left: auto;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 20px;
-    z-index: -1;
-    background: linear-gradient(to left, $mint, $jasmine);
-    transition: inset 0.35s ease-in-out;
-    filter: blur(10px);
   }
 
   fa-icon {
@@ -253,9 +240,8 @@
     margin-top: -4px;
   }
 
-  &:hover::after,
-  &:focus::after {
-    inset: 0px;
+  &:hover {
+    border-color: $mint;
   }
 }
 
@@ -483,6 +469,7 @@
 // modal styles
 .task-title-to-manipulate {
   color: $mint;
+  word-break: break-all;
 }
 
 .remove-border {
