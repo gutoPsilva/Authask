@@ -18,10 +18,9 @@ export class AuthService {
     const userDB = await this.userService.findLocalUser({ username: username }); // if no user is found, it will return an error "Invalid credentials" since the user is null
 
     // check if user exists and compare if raw password is equal to the hashed password
-    if (userDB && (await comparePassword(password, userDB.password))) {
-      console.log('logged in');
+    if (userDB && (await comparePassword(password, userDB.password)))
       return userDB;
-    }
+
     return null;
   }
 
@@ -29,7 +28,6 @@ export class AuthService {
     userDetails: DiscordUserDetails,
   ): Promise<DiscordUser> {
     // it's a signin, so it will only return a user if it exists, otherwise it will create a new user and return it
-    console.log('Validating discord user');
     const userDB = await this.userService.findDiscordUser({
       discordId: userDetails.discordId,
     });

@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export function validateDate(dateString: string): Date {
-  console.log(dateString);
   const datePattern =
     /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\.\d{3}Z$/; // "YYYY-MM-DDTHH:MM:SS.sssZ, 1900-01-01T00:00:00.000Z, 2099-12-31T23:59:59.999Z"
   if (!datePattern.test(dateString)) {
@@ -25,8 +24,6 @@ export function validateDate(dateString: string): Date {
   }
 
   // i don't need to do the same with the timepart because the REGEX already checks if it's a valid time, 00:00 to 23:59
-
-  console.log(date);
 
   return date; // returns a valid date
 }
