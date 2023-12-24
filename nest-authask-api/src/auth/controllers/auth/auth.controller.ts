@@ -12,8 +12,9 @@ import {
 import { RegisterLocalUserDto } from 'src/auth/dtos/registerLocalUser.dto';
 import {
   AuthenticatedGuard,
-  UnifiedAuthGuard,
-} from 'src/auth/utils/Guards/UnifiedGuards';
+  DiscordAuthGuard,
+  LocalAuthGuard,
+} from 'src/auth/utils/Guards/AuthGuards';
 import { UsersService } from 'src/users/services/users/users.service';
 import { Request } from 'express';
 import { ResetLocalPass } from 'src/auth/dtos/ResetLocalPass.dto';
@@ -22,7 +23,7 @@ import { ResetLocalPass } from 'src/auth/dtos/ResetLocalPass.dto';
 export class AuthController {
   constructor(private userService: UsersService) {}
 
-  @UseGuards(UnifiedAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   async loginLocal(@Req() req: Request) {
     console.log(req.user);
@@ -36,11 +37,11 @@ export class AuthController {
     return createdUser;
   }
 
-  @UseGuards(UnifiedAuthGuard)
+  @UseGuards(DiscordAuthGuard)
   @Get('discord')
   async signinDiscord() {}
 
-  @UseGuards(UnifiedAuthGuard)
+  @UseGuards(DiscordAuthGuard)
   @Get('discord/redirect')
   async discordRedirect(@Req() req: Request) {
     // authorized

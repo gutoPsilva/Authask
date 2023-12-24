@@ -10,7 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthenticatedGuard } from 'src/auth/utils/Guards/UnifiedGuards';
+import { AuthenticatedGuard } from 'src/auth/utils/Guards/AuthGuards';
 import { TasksService } from 'src/tasks/services/tasks/tasks.service';
 import { Request } from 'express';
 import { DiscordUser } from 'src/entities/DiscordUser.entity';
