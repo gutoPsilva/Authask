@@ -12,6 +12,8 @@ import { TasksModule } from './tasks/tasks.module';
 import { EmailModule } from './email/email.module';
 import { ProfileModule } from './profile/profile.module';
 import { Profile } from './entities/Profile.entity';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,10 +27,14 @@ import { Profile } from './entities/Profile.entity';
       entities: [LocalUser, DiscordUser, Task, Session, PassTokens, Profile],
       synchronize: true,
     }),
+    PassportModule.register({ session: true }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
     UsersModule,
     AuthModule,
     TasksModule,
-    PassportModule.register({ session: true }),
     EmailModule,
     ProfileModule,
   ],

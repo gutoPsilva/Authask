@@ -18,16 +18,33 @@ export class ProfileService {
     @InjectRepository(Profile) private profileRepository: Repository<Profile>,
   ) {}
 
-  async getProfile(user: LocalUser | DiscordUser) {
+  async findProfile(user: LocalUser | DiscordUser) {
+    const userKey = user instanceof LocalUser ? 'localUser' : 'discordUser';
+    return await this.profileRepository.findOneBy({
+      [userKey]: user,
+    });
+  }
+
+  async getProfileInfo(user: LocalUser | DiscordUser) {
     const stats = await this.tasksService.getStats(user);
     const userInfo =
       user instanceof DiscordUser
         ? await this.userService.findDiscordUser({ id: user.id })
         : await this.userService.findLocalUser({ id: user.id });
 
+    const profile = await this.findProfile(user);
+
+    // if there is a profile, get the profile picture url, else, return undefined
+    const pfp = profile
+      ? `http://localhost:${process.env.PORT || 3000}/uploads/${
+          profile.filename
+        }`
+      : undefined;
+
     return {
       profile: {
         ...userInfo,
+        pfp,
         password: undefined,
         id: undefined,
       },
@@ -40,18 +57,14 @@ export class ProfileService {
     user: LocalUser | DiscordUser,
   ) {
     const unlinkAsync = util.promisify(fs.unlink);
-    const userKey = user instanceof LocalUser ? 'localUser' : 'discordUser';
 
-    const userHasPfp = await this.profileRepository.findOne({
-      where: {
-        [userKey]: user,
-      },
-    });
+    const profile = await this.findProfile(user);
 
-    if (!userHasPfp) {
+    if (!profile) {
       const newPfp = this.profileRepository.create({
         filename: file.filename,
-        [userKey]: user,
+        localUser: user instanceof LocalUser ? user : undefined,
+        discordUser: user instanceof DiscordUser ? user : undefined,
       });
 
       await this.profileRepository.save(newPfp);
@@ -60,8 +73,8 @@ export class ProfileService {
         uploaded: true,
       };
     } else {
-      console.log('last upload: ' + userHasPfp.filename);
-      const oldFilePath = path.join('./uploads', userHasPfp.filename);
+      console.log('last upload: ' + profile.filename);
+      const oldFilePath = path.join('./uploads', profile.filename);
 
       try {
         await unlinkAsync(oldFilePath);
@@ -70,8 +83,8 @@ export class ProfileService {
       }
 
       console.log(file.filename); // the new file name
-      userHasPfp.filename = file.filename;
-      await this.profileRepository.save(userHasPfp);
+      profile.filename = file.filename;
+      await this.profileRepository.save(profile);
       return {
         message: 'Profile picture updated successfully',
         uploaded: true,
@@ -81,18 +94,12 @@ export class ProfileService {
 
   async deleteProfilePicture(user: LocalUser | DiscordUser) {
     const unlinkAsync = util.promisify(fs.unlink);
-    const userKey = user instanceof LocalUser ? 'localUser' : 'discordUser';
+    const profile = await this.findProfile(user);
 
-    const userHasPfp = await this.profileRepository.findOne({
-      where: {
-        [userKey]: user,
-      },
-    });
-
-    if (userHasPfp) {
-      const oldFilePath = path.join('./uploads', userHasPfp.filename);
+    if (profile) {
+      const oldFilePath = path.join('./uploads', profile.filename);
       await unlinkAsync(oldFilePath);
-      await this.profileRepository.remove(userHasPfp);
+      await this.profileRepository.remove(profile);
 
       return {
         message: 'Profile picture deleted successfully',

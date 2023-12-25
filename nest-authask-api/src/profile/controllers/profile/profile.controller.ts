@@ -2,7 +2,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   Post,
   Req,
   UploadedFile,
@@ -25,7 +24,7 @@ export class ProfileController {
   @UseGuards(AuthenticatedGuard)
   @Get()
   async getProfile(@Req() req: Request) {
-    return await this.profileService.getProfile(
+    return await this.profileService.getProfileInfo(
       req.user as LocalUser | DiscordUser,
     );
   }
@@ -46,7 +45,6 @@ export class ProfileController {
     }),
   )
   @Post('upload')
-  @HttpCode(200)
   async uploadFile(
     @UploadedFile(new FileValidationPipe()) file: Express.Multer.File,
     @Req() req: Request,
