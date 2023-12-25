@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -20,13 +20,14 @@ export class ProfileService {
 
   async getProfile(user: LocalUser | DiscordUser) {
     const stats = await this.tasksService.getStats(user);
-    const profile =
+    const userInfo =
       user instanceof DiscordUser
         ? await this.userService.findDiscordUser({ id: user.id })
         : await this.userService.findLocalUser({ id: user.id });
+
     return {
       profile: {
-        ...profile,
+        ...userInfo,
         password: undefined,
         id: undefined,
       },
@@ -39,35 +40,66 @@ export class ProfileService {
     user: LocalUser | DiscordUser,
   ) {
     const unlinkAsync = util.promisify(fs.unlink);
+    const userKey = user instanceof LocalUser ? 'localUser' : 'discordUser';
 
-    if (user instanceof LocalUser) {
-      console.log(file.filename);
-      const userHasPfp = await this.profileRepository.findOne({
-        where: {
-          localUser: user,
-        },
+    const userHasPfp = await this.profileRepository.findOne({
+      where: {
+        [userKey]: user,
+      },
+    });
+
+    if (!userHasPfp) {
+      const newPfp = this.profileRepository.create({
+        filename: file.filename,
+        [userKey]: user,
       });
 
-      if (!userHasPfp) {
-        const newPfp = this.profileRepository.create({
-          filename: file.filename,
-          localUser: user,
-        });
+      await this.profileRepository.save(newPfp);
+      return {
+        message: 'Profile picture uploaded successfully',
+        uploaded: true,
+      };
+    } else {
+      console.log('last upload: ' + userHasPfp.filename);
+      const oldFilePath = path.join('./uploads', userHasPfp.filename);
 
-        return await this.profileRepository.save(newPfp);
-      } else {
-        console.log('last upload: ' + userHasPfp.filename);
-        const oldFilePath = path.join('./uploads', userHasPfp.filename);
-        console.log(oldFilePath);
-        try {
-          await unlinkAsync(oldFilePath);
-        } catch (err) {
-          console.log(err);
-        }
-
-        userHasPfp.filename = file.filename;
-        return await this.profileRepository.save(userHasPfp);
+      try {
+        await unlinkAsync(oldFilePath);
+      } catch (err) {
+        console.log(err);
       }
+
+      console.log(file.filename); // the new file name
+      userHasPfp.filename = file.filename;
+      await this.profileRepository.save(userHasPfp);
+      return {
+        message: 'Profile picture updated successfully',
+        uploaded: true,
+      };
+    }
+  }
+
+  async deleteProfilePicture(user: LocalUser | DiscordUser) {
+    const unlinkAsync = util.promisify(fs.unlink);
+    const userKey = user instanceof LocalUser ? 'localUser' : 'discordUser';
+
+    const userHasPfp = await this.profileRepository.findOne({
+      where: {
+        [userKey]: user,
+      },
+    });
+
+    if (userHasPfp) {
+      const oldFilePath = path.join('./uploads', userHasPfp.filename);
+      await unlinkAsync(oldFilePath);
+      await this.profileRepository.remove(userHasPfp);
+
+      return {
+        message: 'Profile picture deleted successfully',
+        deleted: true,
+      };
+    } else {
+      throw new HttpException('User has no profile picture', 404);
     }
   }
 }

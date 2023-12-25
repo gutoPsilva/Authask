@@ -33,3 +33,6 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Ignore Uploaded files (they are in /uploads and their names are linked on the local db)
+/uploads/*

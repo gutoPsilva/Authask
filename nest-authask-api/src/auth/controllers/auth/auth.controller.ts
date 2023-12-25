@@ -8,6 +8,7 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { RegisterLocalUserDto } from 'src/auth/dtos/registerLocalUser.dto';
 import {
@@ -25,6 +26,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @HttpCode(200)
   async loginLocal(@Req() req: Request) {
     console.log(req.user);
     return req.user;

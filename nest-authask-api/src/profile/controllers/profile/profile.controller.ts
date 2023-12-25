@@ -1,8 +1,10 @@
 import {
   Controller,
+  Delete,
   Get,
-  Req,
+  HttpCode,
   Post,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -35,7 +37,8 @@ export class ProfileController {
         destination: './uploads',
         filename: (req, file, cb) => {
           const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9); // é para gerar um nome único para o arquivo, se de algum modo dois arquivos tiverem o mesmo nome essa pessoa tem q jogar na mega-sena pô, a chance disso acontecer é de 1 em 1 QUADRILHÃO
+            Math.random().toString(36).substring(2, 15) +
+            Math.random().toString(36).substring(2, 15);
           const extension = file.mimetype.split('/')[1]; // Extract the extension from the mimetype, after image/
           cb(null, `${uniqueSuffix}.${extension}`);
         },
@@ -43,14 +46,22 @@ export class ProfileController {
     }),
   )
   @Post('upload')
+  @HttpCode(200)
   async uploadFile(
     @UploadedFile(new FileValidationPipe()) file: Express.Multer.File,
     @Req() req: Request,
   ) {
-    await this.profileService.changeProfilePicture(
+    return await this.profileService.changeProfilePicture(
       file,
       req.user as LocalUser | DiscordUser,
     );
-    return file;
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Delete('upload')
+  async deleteFile(@Req() req: Request) {
+    return await this.profileService.deleteProfilePicture(
+      req.user as LocalUser | DiscordUser,
+    );
   }
 }
