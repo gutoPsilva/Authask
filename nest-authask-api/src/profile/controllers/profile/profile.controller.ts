@@ -8,6 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 import * as multer from 'multer';
@@ -35,9 +36,7 @@ export class ProfileController {
       storage: multer.diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Math.random().toString(36).substring(2, 15) +
-            Math.random().toString(36).substring(2, 15);
+          const uniqueSuffix = uuidv4() + Date.now();
           const extension = file.mimetype.split('/')[1]; // Extract the extension from the mimetype, after image/
           cb(null, `${uniqueSuffix}.${extension}`);
         },
