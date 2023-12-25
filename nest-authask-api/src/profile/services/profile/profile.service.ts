@@ -26,4 +26,8 @@ export class ProfileService {
       stats,
     };
   }
+
+  async saveProfilePicture(file: Express.Multer.File) {
+    console.log(file);
+  }
 }
