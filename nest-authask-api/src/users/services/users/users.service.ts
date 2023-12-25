@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ResetLocalPass } from 'src/auth/dtos/ResetLocalPass.dto';
+import { ResetLocalPassDto } from 'src/auth/dtos/ResetLocalPass.dto';
+import { UpdateLocalPassDto } from 'src/auth/dtos/UpdateLocalPass.dto';
 import { DiscordUser } from 'src/entities/DiscordUser.entity';
 import { LocalUser } from 'src/entities/LocalUser.entity';
 import { PassTokens } from 'src/entities/PassTokens.entity';
@@ -8,7 +9,7 @@ import {
   DiscordUserDetails,
   LocalUserDetails,
 } from 'src/utils/interfaces e types/user.interface';
-import { hashPassword } from 'src/utils/password';
+import { comparePassword, hashPassword } from 'src/utils/password';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -89,7 +90,25 @@ export class UsersService {
     return await this.discordUserRepository.save(newUser);
   }
 
-  async resetPassword(resetDto: ResetLocalPass) {
+  // this method is called in cases where the user wants to update his password while logged in
+  async updatePassword(updateDto: UpdateLocalPassDto, user: LocalUser) {
+    const { password, newPassword } = updateDto;
+    const userDB = await this.localUserRepository.findOneBy(user);
+    if (!userDB)
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+
+    const passwordMatch = await comparePassword(password, userDB.password);
+    if (!passwordMatch)
+      throw new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
+
+    userDB.password = await hashPassword(newPassword);
+
+    await this.localUserRepository.save(userDB);
+    return { message: 'Password updated successfully' };
+  }
+
+  // this method is called when the user requests a password reset when he forgot his password and is not logged in
+  async resetPassword(resetDto: ResetLocalPassDto) {
     const { token, password } = resetDto;
     const tokenDB = await this.tokensRepository.findOneBy({ token });
 

@@ -9,6 +9,7 @@ import {
   HttpException,
   HttpStatus,
   HttpCode,
+  Patch,
 } from '@nestjs/common';
 import { RegisterLocalUserDto } from 'src/auth/dtos/registerLocalUser.dto';
 import {
@@ -18,7 +19,9 @@ import {
 } from 'src/auth/utils/Guards/AuthGuards';
 import { UsersService } from 'src/users/services/users/users.service';
 import { Request } from 'express';
-import { ResetLocalPass } from 'src/auth/dtos/ResetLocalPass.dto';
+import { ResetLocalPassDto } from 'src/auth/dtos/ResetLocalPass.dto';
+import { UpdateLocalPassDto } from 'src/auth/dtos/UpdateLocalPass.dto';
+import { LocalUser } from 'src/entities/LocalUser.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +31,6 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   async loginLocal(@Req() req: Request) {
-    console.log(req.user);
     return req.user;
   }
 
@@ -74,8 +76,20 @@ export class AuthController {
     }
   }
 
-  @Post('reset-password')
-  resetPass(@Body() resetLocalPassDto: ResetLocalPass) {
+  @UseGuards(AuthenticatedGuard)
+  @Patch('update-password')
+  updatePass(
+    @Body() updateLocalPassDto: UpdateLocalPassDto,
+    @Req() req: Request,
+  ) {
+    return this.userService.updatePassword(
+      updateLocalPassDto,
+      req.user as LocalUser,
+    );
+  }
+
+  @Patch('reset-password')
+  resetPass(@Body() resetLocalPassDto: ResetLocalPassDto) {
     return this.userService.resetPassword(resetLocalPassDto);
   }
 }
