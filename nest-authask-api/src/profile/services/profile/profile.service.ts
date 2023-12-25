@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as util from 'util';
 import { DiscordUser } from 'src/entities/DiscordUser.entity';
 import { LocalUser } from 'src/entities/LocalUser.entity';
 import { Profile } from 'src/entities/Profile.entity';
@@ -31,10 +34,12 @@ export class ProfileService {
     };
   }
 
-  async saveProfilePicture(
+  async changeProfilePicture(
     file: Express.Multer.File,
     user: LocalUser | DiscordUser,
   ) {
+    const unlinkAsync = util.promisify(fs.unlink);
+
     if (user instanceof LocalUser) {
       console.log(file.filename);
       const userHasPfp = await this.profileRepository.findOne({
@@ -44,17 +49,24 @@ export class ProfileService {
       });
 
       if (!userHasPfp) {
-        await this.profileRepository.save({
-          localUser: user,
-          filename: file.filename,
-        });
-      } else {
         const newPfp = this.profileRepository.create({
           filename: file.filename,
           localUser: user,
         });
 
         return await this.profileRepository.save(newPfp);
+      } else {
+        console.log('last upload: ' + userHasPfp.filename);
+        const oldFilePath = path.join('./uploads', userHasPfp.filename);
+        console.log(oldFilePath);
+        try {
+          await unlinkAsync(oldFilePath);
+        } catch (err) {
+          console.log(err);
+        }
+
+        userHasPfp.filename = file.filename;
+        return await this.profileRepository.save(userHasPfp);
       }
     }
   }
