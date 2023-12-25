@@ -1,5 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Task } from './Task.entity';
+import { Profile } from './Profile.entity';
 
 @Entity({ name: 'discord_users' })
 export class DiscordUser {
@@ -14,4 +21,7 @@ export class DiscordUser {
 
   @OneToMany(() => Task, (task) => task.discordUser)
   tasks: Task[];
+
+  @OneToOne(() => Profile, (profile) => profile.discordUser)
+  pfp?: Profile;
 }

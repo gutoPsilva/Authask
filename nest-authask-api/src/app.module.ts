@@ -11,6 +11,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TasksModule } from './tasks/tasks.module';
 import { EmailModule } from './email/email.module';
 import { ProfileModule } from './profile/profile.module';
+import { Profile } from './entities/Profile.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { ProfileModule } from './profile/profile.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [LocalUser, DiscordUser, Task, Session, PassTokens],
+      entities: [LocalUser, DiscordUser, Task, Session, PassTokens, Profile],
       synchronize: true,
     }),
     UsersModule,

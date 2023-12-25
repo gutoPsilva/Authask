@@ -1,5 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Task } from './Task.entity';
+import { Profile } from './Profile.entity';
 
 @Entity({ name: 'local_users' })
 export class LocalUser {
@@ -21,4 +28,7 @@ export class LocalUser {
 
   @OneToMany(() => Task, (task) => task.localUser)
   tasks: Task[];
+
+  @OneToOne(() => Profile, (profile) => profile.localUser)
+  pfp?: Profile;
 }

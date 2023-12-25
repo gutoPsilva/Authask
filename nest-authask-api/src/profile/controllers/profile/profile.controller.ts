@@ -36,8 +36,12 @@ export class ProfileController {
   @Post('upload')
   async uploadFile(
     @UploadedFile(new FileValidationPipe()) file: Express.Multer.File,
+    @Req() req: Request,
   ) {
-    await this.profileService.saveProfilePicture(file);
+    await this.profileService.saveProfilePicture(
+      file,
+      req.user as LocalUser | DiscordUser,
+    );
     return file;
   }
 }
