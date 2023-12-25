@@ -83,9 +83,25 @@ In the event that there is no authenticated user to log out, the response will b
 
 Please be aware that each session has a maximum duration of 4 hours. Every time you log in, a new session is created. Additionally, if there is another active session for the same client, it will be destroyed upon your login. Also when you logout the session cookie is destroyed.
 
+### **Reset Password**
+
+You might fit in this scenario when you're logged in and want to change the current authenticated user password, to do so access the endpoint `/auth/update-password` with PATCH method, providing the following object on the body:
+
+```ts
+{ 
+  "password": string,
+  "newPassword": string,
+}
+```
+
+The password field must match the user password that is registered in the DB.
+The newPassword must respect the previously mentioned validations.
+
+If the password field is wrong, you'll receive a BAD_REQUEST response saying : "Invalid password", else, you'll get a message saying that the password was updated.
+
 ### **Forgot Password**
 
-In case you forgot your local account password, you can access the endpoint `email/send-token` with POST method, providing in the body the registered email from your account.
+In case you forgot your local account password, you can access the endpoint `/email/send-token` with PATCH method, providing in the body the registered email from your account.
 
 If the email isn't from any user on the local DB, you'll receive a Http Error with invalid credentials. Else, you'll receive a message saying that a token was sent to your email.
 
@@ -207,6 +223,62 @@ To delete a task, use the DELETE method on the ``/tasks/:id`` endpoint, where :i
 
 Similar to updating a task, it's important to highlight that deletion is only permissible if the task is associated with the authenticated user.
 
+## Profile
+
+This module provides some informations about the current authenticated user.
+
+### Get Profile Info
+
+Accessing the endpoint `/profile` with GET method you will receive the following object:
+
+```ts
+{
+  profile: {
+    username: string,
+    email: string,
+    pfp?: string
+  },
+  stats: {
+    totalTasks: number,
+    openTasks: number,
+    inProgressTasks: number,
+    doneTasks: number,
+    urgentTasks: number,
+  }
+}
+```
+
+Keep in mind that the pfp is a link that directs to the uploaded profile picture. If the user has uploaded a file to the server, the URL of the image will be returned, otherwise, that field won't be returned on this get.
+
+### Upload Profile Picture
+
+You can upload a image to serve as your profile picture on the server, access the endpoint `/profile/upload` with POST method, and using form-data, provide a **SINGLE FILE** with the key *"pfp"*.
+**It's important to point out that the file size must be lower or equal to 10MB, and it's extensions must be .jpg, .jpeg, .png or .gif**, if you don't respect that, the file won't be uploaded on the server.
+
+If you already uploaded an image but want to change it, just repeat these steps.
+
+The message from the response may be slightly different in some cases, but the object follows this structure:
+
+```json
+{
+  message: 'Profile picture updated successfully',
+  uploaded: true,
+};
+```
+
+### Deleting the Profile Picture
+
+To delete the current user profile picture access the endpoint `/profile/upload` with DELETE method, if the current user has an associated pfp to delete, you'll receive:
+
+``` json
+{
+  message: 'Profile picture deleted successfully',
+  deleted: true,
+};
+```
+
+Otherwise, if the user doesn't have an associated pfp you'll receive a 404 error.
+
 ## Copying the API
 
 If you want to copy and use the functionalities from this API, you must follow these steps.
@@ -265,7 +337,7 @@ As you may have noticed, there are some environment variables related to Discord
 Go to discord.com/developers, create an application, and set up the CLIENT_ID, CLIENT_SECRET, and REDIRECT_URI. This part is simple, but **PAY ATTENTION** to the REDIRECT_URI. In my Discord application, i specified in the auth.controller that the endpoint would be `auth/discord/redirect`, as shown in the following code:
 
 ```ts
-@UseGuards(UnifiedAuthGuard)
+@UseGuards(DiscordAuthGuard)
 @Get('discord/redirect')
 async discordRedirect(@Req() req: Request) {
   // authorized
