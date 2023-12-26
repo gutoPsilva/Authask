@@ -18,3 +18,8 @@ export interface UploadResponse {
   message: string;
   uploaded: boolean;
 }
+
+export interface DeleteImageResponse {
+  message: string;
+  deleted: boolean;
+}

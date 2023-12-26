@@ -4,15 +4,16 @@
     >'s Profile
   </h2>
   <div class="details">
-    <div *ngIf="info.profile.discordId">
-      <p>
-        Since you're account is associated with
-        <span class="mint">discord</span>, you can only view your stats.
-      </p>
-    </div>
-    <div class="user-info-container" *ngIf="!info.profile.discordId">
+    <div class="user-info-container">
       <div class="pfp-wrapper">
-        <img src="{{ info.profile.pfp }}" alt="Profile picture" />
+        <img
+          tabindex="0"
+          src="{{ info.profile.pfp }}"
+          alt="Profile picture"
+          title="Click to delete profile picture"
+          (keydown)="handleKeydown($event)"
+          (click)="removeImage()"
+        />
         <input
           type="file"
           name="pfp"
@@ -20,15 +21,20 @@
           [disabled]="uploadingFile"
           (change)="onFileSelected($event)"
         />
-        <label class="camera-container" for="pfp"
+        <label title="Change profile picture" class="camera-container" for="pfp"
           ><fa-icon [icon]="cameraIcon"></fa-icon
         ></label>
       </div>
       <div class="info">
         <p>{{ info.profile.email }}</p>
+        <p *ngIf="info.profile.discordId">
+          DiscordID: {{ info.profile.discordId }}
+        </p>
         <div class="action-container">
-          <p class="mint">Local User</p>
-          <button>Change Password</button>
+          <p class="mint">
+            {{ info.profile.discordId ? "Discord" : "Local" }} User
+          </p>
+          <button *ngIf="!info.profile.discordId">Change Password</button>
         </div>
       </div>
     </div>
@@ -47,7 +53,7 @@
       </div>
       <div class="stat">
         <h4>
-          <span class="jasmine">{{ info.stats.doneTasks }}</span> Finished tasks
+          <span class="jasmine">{{ info.stats.doneTasks }}</span> Tasks done
         </h4>
       </div>
       <div class="stat">

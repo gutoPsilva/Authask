@@ -80,15 +80,23 @@ h4 {
   position: relative;
   width: 100%;
   max-width: 80px;
+  background-color: $night;
   aspect-ratio: 1;
 
   img {
+    outline: none;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border: 1px solid $mint;
     border-radius: 9999px;
+    cursor: pointer;
     object-position: center;
+    transition: all .15s ease-in-out;
+
+    &:hover,
+    &:focus {
+      opacity: 0.5;
+    }
   }
 }
 
@@ -104,19 +112,19 @@ input[type="file"] {
   padding: 0.4rem;
   border: 1px solid $mint;
   border-radius: 9999px;
-  background-color: $night;
+  background-color: rgba($color: $night, $alpha: 0.5);
   outline: none;
+
+  fa-icon {
+    color: $whiteSmoke;
+  }
 
   &:hover,
   &:focus {
     fa-icon {
-      animation: rotate .4s ease-in-out;
+      animation: rotate 0.4s ease-in-out;
     }
   }
-}
-
-fa-icon {
-  color: $whiteSmoke;
 }
 
 @keyframes rotate {
@@ -154,7 +162,7 @@ fa-icon {
   }
 
   @media (min-width: 1024px) {
-    max-width: 560px;
+    max-width: 540px;
   }
 }
 
@@ -179,6 +187,10 @@ fa-icon {
   p {
     word-break: normal;
     font-size: 1.15rem;
+  }
+
+  @media (min-width: 768px) {
+    gap: 1rem;
   }
 }
 

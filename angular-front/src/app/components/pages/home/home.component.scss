@@ -113,6 +113,18 @@ section {
   color: $jasmine;
 }
 
+.links {
+  outline: none;
+  border-bottom: 1px solid transparent;
+  transition: all .35s ease-in-out;
+
+  &:focus,
+  &:hover {
+    color: $mint;
+    border-bottom-color: $mint;
+  }
+}
+
 .card-img-top {
   border-bottom: 1px solid $mint;
 }

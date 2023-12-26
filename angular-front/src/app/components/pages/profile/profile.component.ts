@@ -31,6 +31,7 @@ export class ProfileComponent {
   };
   loadingInfo = true;
   uploadingFile = false;
+  removingFile = false;
 
   cameraIcon = faCamera;
 
@@ -41,10 +42,10 @@ export class ProfileComponent {
   getProfile() {
     this.profileService.getProfile().subscribe((profile) => {
       this.info = profile;
-      if (!this.info.profile.pfp)
-        this.info.profile.pfp =
-          'https://cdn.discordapp.com/attachments/881329791658668288/881329821534201856/unknown.png';
-      console.log(this.info);
+      if (!this.info.profile.pfp) {
+        // if the user doesn't have a pfp, set a default one
+        this.info.profile.pfp = 'https://i.imgur.com/Gw40OZ7.jpg';
+      }
 
       this.loadingInfo = false;
     });
@@ -52,10 +53,16 @@ export class ProfileComponent {
 
   onFileSelected(event: Event) {
     this.uploadingFile = true;
-    this.alertService.showLoadingAlert('Uploading image...');
 
     const inputElement = event.target as HTMLInputElement;
     const file = inputElement.files?.item(0);
+
+    // this conditional only happens if the user cancels the FIRST file selection, if the user selects a file and then cancels the next file selection, the file won't be null since the inputElement.files will still have the previous file
+    if (!file) {
+      this.alertService.showAlert('No file selected');
+      this.uploadingFile = false;
+      return;
+    }
 
     const isImage = [
       'image/png',
@@ -64,24 +71,54 @@ export class ProfileComponent {
       'image/gif',
     ].includes(file?.type || '');
 
-    if (!file || !isImage) {
+    if (!isImage) {
       this.alertService.showAlert(
         'Invalid file type, must be an image (png, jpg, jpeg, gif)'
       );
+      this.uploadingFile = false;
       return;
     }
 
     if (file.size > 1024 * 1024 * 10) {
       // 10MB
       this.alertService.showAlert('File too large, max size is 10MB');
+      this.uploadingFile = false;
       return;
     }
 
+    this.alertService.showLoadingAlert('Uploading image...');
     this.profileService.uploadImage(file).subscribe((res) => {
       this.uploadingFile = false;
       this.alertService.showLoadingAlert('');
 
-      if(res.uploaded) {
+      if (res.uploaded) {
+        this.alertService.showAlert(res.message);
+        this.getProfile();
+      }
+    });
+  }
+
+  handleKeydown(event: KeyboardEvent) {
+    if(event.key === 'Enter') this.removeImage();
+  }
+
+  removeImage() {
+    if (this.info.profile.pfp === 'https://i.imgur.com/Gw40OZ7.jpg') {
+      this.alertService.showAlert(
+        "No image to remove on the server, you're currently using the default image"
+      );
+      return;
+    }
+    if (this.removingFile) return; // still processing the last request, don't send another one
+
+    this.removingFile = true;
+    this.alertService.showLoadingAlert('Removing image...');
+
+    this.profileService.deleteImage().subscribe((res) => {
+      this.removingFile = false;
+      this.alertService.showLoadingAlert('');
+
+      if (res.deleted) {
         this.alertService.showAlert(res.message);
         this.getProfile();
       }

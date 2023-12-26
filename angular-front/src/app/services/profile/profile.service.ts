@@ -5,6 +5,7 @@ import {
   ProfileDetails,
   UploadResponse,
 } from 'src/interfaces/profile.interface';
+import { DeleteImageResponse } from '../../../interfaces/profile.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,14 @@ export class ProfileService {
 
     return this.http
       .post<UploadResponse>(this.apiURL + '/upload', formData, {
+        withCredentials: true,
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteImage(): Observable<DeleteImageResponse> {
+    return this.http
+      .delete<DeleteImageResponse>(this.apiURL + '/upload', {
         withCredentials: true,
       })
       .pipe(catchError(this.handleError));
