@@ -19,6 +19,7 @@ import { TaskListComponent } from './components/pages/task-list/task-list.compon
 import { LoggedOutPermissionsService, PermissionsService } from './guards/auth.guard';
 import { HomeComponent } from './components/pages/home/home.component';
 import { ForgotPasswordComponent } from './components/pages/forgot-password/forgot-password.component';
+import { ProfileComponent } from './components/pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ForgotPasswordComponent } from './components/pages/forgot-password/forg
     TaskListComponent,
     HomeComponent,
     ForgotPasswordComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

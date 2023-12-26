@@ -7,6 +7,7 @@ import { TaskListComponent } from './components/pages/task-list/task-list.compon
 import { AuthenticatedGuard, NotAuthenticatedGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/pages/home/home.component';
 import { ForgotPasswordComponent } from './components/pages/forgot-password/forgot-password.component';
+import { ProfileComponent } from './components/pages/profile/profile.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -33,6 +34,11 @@ const routes: Routes = [
   {
     path: '404-page-not-found',
     component: PageNotFoundComponent,
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthenticatedGuard],
   },
   { path: '**', redirectTo: '404-page-not-found' },
 ];

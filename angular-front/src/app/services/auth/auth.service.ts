@@ -91,7 +91,7 @@ export class AuthService {
 
   resetPassword(resetDetails: ResetUserPass) {
     const url = this.apiURL + 'reset-password';
-    return this.http.post(url, resetDetails).pipe(catchError(this.handleError));
+    return this.http.patch(url, resetDetails).pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {
