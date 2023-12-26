@@ -34,7 +34,13 @@
           <p class="mint">
             {{ info.profile.discordId ? "Discord" : "Local" }} User
           </p>
-          <button *ngIf="!info.profile.discordId">Change Password</button>
+          <button
+            *ngIf="!info.profile.discordId"
+            class="btn-change"
+            (click)="open(contentChange)"
+          >
+            Change Password
+          </button>
         </div>
       </div>
     </div>
@@ -69,6 +75,108 @@
       </div>
     </div>
   </div>
+
+  <!-- Change password modal -->
+  <ng-template #contentChange let-modal>
+    <div class="modal-header custom-border">
+      <h4 class="modal-title" id="modal-basic-title">
+        <strong>Changing Password</strong>
+      </h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <form
+        name="changePasswordForm"
+        (ngSubmit)="onSubmit()"
+        [formGroup]="passwordForm"
+        #formDir="ngForm"
+      >
+        <div class="form-group">
+          <div>
+            <input
+              appDisableCopyPaste
+              class="password"
+              formControlName="password"
+              type="{{ showPassword ? 'text' : 'password' }}"
+              id="password"
+              placeholder="password"
+              autocomplete="off"
+              required
+              title="U can't copy/paste this input >:["
+            />
+            <label for="password" class="form-label" aria-placeholder="password"
+              >Password</label
+            >
+            <fa-icon
+              [icon]="showPassword ? eyeSlash : eye"
+              tabindex="0"
+              (keydown)="togglePassword('password', $event)"
+              (click)="togglePassword('password')"
+            ></fa-icon>
+          </div>
+          <div
+            class="wrong-container mt-1"
+            *ngIf="password?.invalid && formDir.submitted"
+          >
+            <p *ngIf="password?.errors?.['required']">Password is required</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <div>
+            <input
+              appDisableCopyPaste
+              class="password"
+              formControlName="newPassword"
+              type="{{ showNewPassword ? 'text' : 'password' }}"
+              id="newPassword"
+              placeholder="newPassword"
+              autocomplete="off"
+              required
+              title="U can't copy/paste this input >:["
+            />
+            <label
+              for="newPassword"
+              class="form-label"
+              aria-placeholder="newPassword"
+              >New Password</label
+            >
+            <fa-icon
+              [icon]="showNewPassword ? eyeSlash : eye"
+              tabindex="0"
+              (keydown)="togglePassword('npassword', $event)"
+              (click)="togglePassword('npassword')"
+            ></fa-icon>
+          </div>
+          <div
+            class="wrong-container mt-1"
+            *ngIf="newPassword?.invalid && formDir.submitted"
+          >
+            <p *ngIf="newPassword?.errors?.['required']">
+              New password is required
+            </p>
+            <p *ngIf="newPassword?.errors?.['minlength']">
+              Minimum length is 8
+            </p>
+            <p
+              *ngIf="newPassword?.errors?.['pattern'] && !newPassword?.errors?.['minlength']"
+            >
+              New password must contain at least 1 uppercase, 1 lowercase, 1
+              number and 1 special character (e.g. !&#64;$%^&*_?.)
+            </p>
+            <!-- Exibir mensagem de erro que está fora do padrão somente se não atender ao pattern fornecido E se o minLength já ter sido respeitado, não quero exibir as 2 mensagens simultaneamente -->
+          </div>
+        </div>
+        <button type="submit">
+          <span>Change Password</span>
+        </button>
+      </form>
+    </div>
+  </ng-template>
 </section>
 <section *ngIf="loadingInfo" class="msg-tasks">
   <p>Fetching your informations...</p>

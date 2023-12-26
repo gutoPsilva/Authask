@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { ProfileService } from 'src/app/services/profile/profile.service';
 import { ProfileDetails } from 'src/interfaces/profile.interface';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from 'src/app/services/alert/alert.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -12,7 +14,8 @@ import { AlertService } from 'src/app/services/alert/alert.service';
 export class ProfileComponent {
   constructor(
     private readonly profileService: ProfileService,
-    private readonly alertService: AlertService
+    private readonly alertService: AlertService,
+    private readonly modalService: NgbModal
   ) {}
   info: ProfileDetails = {
     profile: {
@@ -29,11 +32,56 @@ export class ProfileComponent {
       urgentTasks: 0,
     },
   };
+
   loadingInfo = true;
   uploadingFile = false;
   removingFile = false;
 
+  eye = faEye;
+  eyeSlash = faEyeSlash;
+
+  showPassword = false;
+  showNewPassword = false;
+  passwordPattern =
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*_?.])[A-Za-z\\d!@#$%^&*_?.]*$';
+
+  passwordForm = new FormGroup({
+    password: new FormControl('', [Validators.required]),
+    newPassword: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(this.passwordPattern),
+    ]),
+  });
+
   cameraIcon = faCamera;
+
+  open(content: any) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  onSubmit() {
+    console.log(this.passwordForm.value);
+
+    if (this.passwordForm.valid) {
+      console.log('valid form');
+    }
+  }
+
+  togglePassword(field: 'password' | 'npassword', event?: KeyboardEvent) {
+    if (event && event.key !== 'Enter') return;
+    field === 'password'
+      ? (this.showPassword = !this.showPassword)
+      : (this.showNewPassword = !this.showNewPassword);
+  }
+
+  get password() {
+    return this.passwordForm.get('password');
+  }
+
+  get newPassword() {
+    return this.passwordForm.get('newPassword');
+  }
 
   ngOnInit() {
     this.getProfile();
@@ -99,7 +147,7 @@ export class ProfileComponent {
   }
 
   handleKeydown(event: KeyboardEvent) {
-    if(event.key === 'Enter') this.removeImage();
+    if (event.key === 'Enter') this.removeImage();
   }
 
   removeImage() {
