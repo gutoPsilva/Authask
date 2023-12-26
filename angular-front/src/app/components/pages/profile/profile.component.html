@@ -1,7 +1,24 @@
 <section *ngIf="!loadingInfo">
   <h2>
-    Currently viewing <span class="username">{{ info.profile.username }}</span>'s Profile
+    Currently viewing <span class="username">{{ info.profile.username }}</span
+    >'s Profile
   </h2>
+  <div class="details">
+    <div *ngIf="info.profile.discordId">
+      <p>
+        Since you're account is associated with
+        <span class="profile-type">discord</span>, you can only view your stats.
+      </p>
+    </div>
+    <div class="user-info" *ngIf="!info.profile.discordId">
+      <img src="{{ info.profile.pfp }}" alt="Profile picture" />
+      <div>
+        <p>{{ info.profile.email }}</p>
+      </div>
+    </div>
+    <h3>Let's check some of your stats</h3>
+    <div class="stats-container"></div>
+  </div>
 </section>
 <section *ngIf="loadingInfo" class="msg-tasks">
   <p>Fetching your informations...</p>

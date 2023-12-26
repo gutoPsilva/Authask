@@ -34,6 +34,7 @@ export class ProfileComponent {
     this.profileService.getProfile().subscribe((profile) => {
       this.info = profile;
       console.log(this.info);
+
       this.loadingInfo = false;
     });
   }

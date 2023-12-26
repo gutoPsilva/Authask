@@ -1,36 +1,41 @@
 @import "../../../../variables.scss";
 
 h2 {
+  cursor: default;
   color: $whiteSmoke;
   font-size: 1.75rem;
+
+  @media (min-width: 640px) {
+    font-size: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 2.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 3rem;
+  }
+}
+
+p {
+  cursor: default;
+  color: $whiteSmoke;
+  font-size: 1.25rem;
+}
+
+h3 {
+  color: $whiteSmoke;
+  font-size: 1.5rem;
 }
 
 .username {
   color: $mint;
-  transition: color .35s ease-in-out;
-  cursor: default;
+  transition: color 0.35s ease-in-out;
   word-break: break-all;
 
-  &:hover{
+  &:hover {
     color: $jasmine;
-  }
-}
-
-@media (min-width: 640px) {
-  h2 {
-    font-size: 2rem;
-  }
-}
-
-@media (min-width: 768px) {
-  h2 {
-    font-size: 2.25rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  h2 {
-    font-size: 3rem;
   }
 }
 
@@ -41,4 +46,34 @@ h2 {
   margin-top: 2em;
   color: $whiteSmoke;
   gap: 1em;
+}
+
+.profile-type {
+  color: $mint;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-top: 1rem;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  max-width: 72px;
+  max-height: 72px;
+  border-radius: 9999px;
+  border: 1px solid $mint;
+  object-fit: cover;
+}
+
+.user-info {
+  display: flex;
+  gap: 1rem;
+
+  p {
+    word-break: break-all;
+  }
 }
