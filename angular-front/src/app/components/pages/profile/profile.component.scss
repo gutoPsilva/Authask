@@ -1,0 +1,44 @@
+@import "../../../../variables.scss";
+
+h2 {
+  color: $whiteSmoke;
+  font-size: 1.75rem;
+}
+
+.username {
+  color: $mint;
+  transition: color .35s ease-in-out;
+  cursor: default;
+  word-break: break-all;
+
+  &:hover{
+    color: $jasmine;
+  }
+}
+
+@media (min-width: 640px) {
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  h2 {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  h2 {
+    font-size: 3rem;
+  }
+}
+
+.msg-tasks {
+  display: flex;
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-top: 2em;
+  color: $whiteSmoke;
+  gap: 1em;
+}

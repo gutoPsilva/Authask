@@ -1,1 +1,11 @@
-<p>profile works!</p>
+<section *ngIf="!loadingInfo">
+  <h2>
+    Currently viewing <span class="username">{{ info.profile.username }}</span>'s Profile
+  </h2>
+</section>
+<section *ngIf="loadingInfo" class="msg-tasks">
+  <p>Fetching your informations...</p>
+  <div class="spinner-border text-light spinner-border-sm" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</section>
