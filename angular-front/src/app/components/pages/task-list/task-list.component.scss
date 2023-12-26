@@ -566,6 +566,15 @@
   margin-left: 87px;
 }
 
+.flex-wrap {
+  display: flex;
+  flex-direction: column;
+
+  @media(min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
 .w-87 {
   width: 87px;
 }

@@ -38,6 +38,7 @@
             *ngIf="!info.profile.discordId"
             class="btn-change"
             (click)="open(contentChange)"
+            [disabled]="changingPassword"
           >
             Change Password
           </button>

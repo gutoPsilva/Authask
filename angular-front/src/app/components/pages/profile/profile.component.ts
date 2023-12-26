@@ -19,6 +19,7 @@ export class ProfileComponent {
     private readonly authService: AuthService,
     private readonly modalService: NgbModal
   ) {}
+  // starts empty but ngOnInit will fill these properties
   info: ProfileDetails = {
     profile: {
       username: '',
@@ -35,14 +36,18 @@ export class ProfileComponent {
     },
   };
 
+  // control properties to enable/disable buttons & etc
   loadingInfo = true;
   uploadingFile = false;
   removingFile = false;
+  changingPassword = false;
 
+  // icons
   cameraIcon = faCamera;
   eye = faEye;
   eyeSlash = faEyeSlash;
 
+  // form stuff
   showPassword = false;
   showNewPassword = false;
   passwordPattern =
@@ -71,17 +76,21 @@ export class ProfileComponent {
         return;
       }
 
+      this.changingPassword = true;
+
       this.modalService.dismissAll();
       this.alertService.showLoadingAlert('Updating password...');
       this.authService.updatePassword({ password, newPassword }).subscribe({
         next: (res) => {
           this.alertService.showAlert(res.message);
           this.alertService.showLoadingAlert('');
+          this.changingPassword = false;
           this.passwordForm.reset();
         },
         error: (err) => {
           this.alertService.showAlert(err.error.message);
           this.alertService.showLoadingAlert('');
+          this.changingPassword = false;
           this.passwordForm.reset();
         },
       });
@@ -116,11 +125,13 @@ export class ProfileComponent {
       }
 
       this.loadingInfo = false;
+      this.removingFile = false; // this was necessary to avoid multiple requests when the user removes the image but the new pfp property wasn't still set
     });
   }
 
   onFileSelected(event: Event) {
     this.uploadingFile = true;
+    console.log(event);
 
     const inputElement = event.target as HTMLInputElement;
     const file = inputElement.files?.item(0);
@@ -163,29 +174,35 @@ export class ProfileComponent {
         this.alertService.showAlert(res.message);
         this.getProfile();
       }
+
+      if (event.target instanceof HTMLInputElement) {
+        event.target.value = ''; // this is necessary to allow the user to upload the same file again after removing it
+      }
     });
   }
 
   handleKeydown(event: KeyboardEvent) {
+    if (this.uploadingFile) return; // still processing the last request, don't send another one
     if (event.key === 'Enter') this.removeImage();
   }
 
   removeImage() {
+    if (this.removingFile) {
+      return; // still processing the last request, don't send another one
+    }
+
     if (this.info.profile.pfp === 'https://i.imgur.com/Gw40OZ7.jpg') {
       this.alertService.showAlert(
-        "No image to remove on the server, you're currently using the default image"
+        "No image to remove on the server, you're currently using the default pfp"
       );
       return;
     }
-    if (this.removingFile) return; // still processing the last request, don't send another one
 
     this.removingFile = true;
+
     this.alertService.showLoadingAlert('Removing image...');
-
     this.profileService.deleteImage().subscribe((res) => {
-      this.removingFile = false;
       this.alertService.showLoadingAlert('');
-
       if (res.deleted) {
         this.alertService.showAlert(res.message);
         this.getProfile();
