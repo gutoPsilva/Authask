@@ -7,17 +7,61 @@
     <div *ngIf="info.profile.discordId">
       <p>
         Since you're account is associated with
-        <span class="profile-type">discord</span>, you can only view your stats.
+        <span class="mint">discord</span>, you can only view your stats.
       </p>
     </div>
-    <div class="user-info" *ngIf="!info.profile.discordId">
-      <img src="{{ info.profile.pfp }}" alt="Profile picture" />
-      <div>
+    <div class="user-info-container" *ngIf="!info.profile.discordId">
+      <div class="pfp-wrapper">
+        <img src="{{ info.profile.pfp }}" alt="Profile picture" />
+        <input
+          type="file"
+          name="pfp"
+          id="pfp"
+          [disabled]="uploadingFile"
+          (change)="onFileSelected($event)"
+        />
+        <label class="camera-container" for="pfp"
+          ><fa-icon [icon]="cameraIcon"></fa-icon
+        ></label>
+      </div>
+      <div class="info">
         <p>{{ info.profile.email }}</p>
+        <div class="action-container">
+          <p class="mint">Local User</p>
+          <button>Change Password</button>
+        </div>
       </div>
     </div>
-    <h3>Let's check some of your stats</h3>
-    <div class="stats-container"></div>
+    <h3>Profile stats:</h3>
+    <div class="stats-container">
+      <div class="stat">
+        <h4>
+          <span class="jasmine"> {{ info.stats.openTasks }} </span> Open tasks
+        </h4>
+      </div>
+      <div class="stat">
+        <h4>
+          <span class="jasmine">{{ info.stats.inProgressTasks }}</span> Tasks in
+          progress
+        </h4>
+      </div>
+      <div class="stat">
+        <h4>
+          <span class="jasmine">{{ info.stats.doneTasks }}</span> Finished tasks
+        </h4>
+      </div>
+      <div class="stat">
+        <h4>
+          <span class="jasmine">{{ info.stats.totalTasks }}</span> Tasks in
+          total
+        </h4>
+      </div>
+      <div class="stat">
+        <h4>
+          <span class="jasmine">{{ info.stats.urgentTasks }}</span> Urgent tasks
+        </h4>
+      </div>
+    </div>
   </div>
 </section>
 <section *ngIf="loadingInfo" class="msg-tasks">

@@ -73,7 +73,7 @@ export class AuthService {
   setUser(user: LocalUser | DiscordUser | null) {
     this.userSubject.next(user);
     if (user) {
-      const expirationDate = new Date().getTime() + 1000 * 60 * 60 * 4; // after setting the user, 4 hours later the cookie and the localStorage must be destroyed
+      const expirationDate = new Date().getTime() + 1000 * 60 * 60 * 1; // after setting the user, 4 hours later the cookie and the localStorage must be destroyed
       localStorage.setItem('user', JSON.stringify({ user, expirationDate }));
     } else localStorage.removeItem('user');
   }
