@@ -60,7 +60,6 @@ export class AuthController {
   @UseGuards(AuthenticatedGuard)
   @Delete('logout')
   logout(@Req() req: Request) {
-    console.log('Logging out');
     try {
       req.logOut((err) => {
         if (err) throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);

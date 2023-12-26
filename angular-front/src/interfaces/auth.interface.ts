@@ -38,3 +38,8 @@ export interface ResetUserPass {
   token: string;
   password: string;
 }
+
+export interface UpdateUserPass {
+  password: string;
+  newPassword: string;
+}

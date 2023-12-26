@@ -7,6 +7,7 @@ import {
   IRegisterLocalUser,
   UserLogoutMsg,
   ResetUserPass,
+  UpdateUserPass,
 } from 'src/interfaces/auth.interface';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 
@@ -89,9 +90,20 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
+  updatePassword(updatePassDto: UpdateUserPass) {
+    const url = this.apiURL + 'update-password';
+    return this.http
+      .patch<{ message: string }>(url, updatePassDto, {
+        withCredentials: true,
+      })
+      .pipe(catchError(this.handleError));
+  }
+
   resetPassword(resetDetails: ResetUserPass) {
     const url = this.apiURL + 'reset-password';
-    return this.http.patch(url, resetDetails).pipe(catchError(this.handleError));
+    return this.http
+      .patch(url, resetDetails)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {

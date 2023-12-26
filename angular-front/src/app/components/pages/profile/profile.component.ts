@@ -5,6 +5,7 @@ import { faCamera, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +16,7 @@ export class ProfileComponent {
   constructor(
     private readonly profileService: ProfileService,
     private readonly alertService: AlertService,
+    private readonly authService: AuthService,
     private readonly modalService: NgbModal
   ) {}
   info: ProfileDetails = {
@@ -37,6 +39,7 @@ export class ProfileComponent {
   uploadingFile = false;
   removingFile = false;
 
+  cameraIcon = faCamera;
   eye = faEye;
   eyeSlash = faEyeSlash;
 
@@ -54,17 +57,34 @@ export class ProfileComponent {
     ]),
   });
 
-  cameraIcon = faCamera;
-
   open(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
   onSubmit() {
-    console.log(this.passwordForm.value);
-
     if (this.passwordForm.valid) {
-      console.log('valid form');
+      const { newPassword, password } = this.passwordForm.value;
+
+      // TS keeps complaining about the passwords being null, but they're not since the forms is valid
+      if (!newPassword || !password) {
+        this.alertService.showAlert('No Password or New Password provided');
+        return;
+      }
+
+      this.modalService.dismissAll();
+      this.alertService.showLoadingAlert('Updating password...');
+      this.authService.updatePassword({ password, newPassword }).subscribe({
+        next: (res) => {
+          this.alertService.showAlert(res.message);
+          this.alertService.showLoadingAlert('');
+          this.passwordForm.reset();
+        },
+        error: (err) => {
+          this.alertService.showAlert(err.error.message);
+          this.alertService.showLoadingAlert('');
+          this.passwordForm.reset();
+        },
+      });
     }
   }
 
