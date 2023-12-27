@@ -2,9 +2,15 @@
 
 This is an Authentication web application with a task managment for each user.
 
-To use the app, users must first create an account and log in, OR, sign in with Discord. Once authenticated, they can create, view, update, and delete their own task lists from a local SQL database.
+To use the app, users must first create an account and log in, OR, sign in with Discord. Once authenticated, they can create, view, update, and delete their own task lists from a local SQL database and manage some informations about their profiles.
 
-Also, you can check more details about this project API at `nest-authask-api/README.md`, and i still have to record two videos (desktop & mobile) showing the front-end consuming the API at `angular-front/README.md`.
+## Project Demo
+
+Checkout out the project demo on YouTube:
+
+[![ProjectDemo](./demo/localhost_4200_home.png)](https://www.youtube.com/watch?v=3vWssTgi8Q0)
+
+You can check more details about this project API at `nest-authask-api/README.md`.
 
 If you think you found any error or bug on my code please contact me, this project was intended to be only for learning purposes.
 
@@ -29,4 +35,4 @@ If you think you found any error or bug on my code please contact me, this proje
 
 ## Honorable Mention
 
-[Github Copilot](https://github.com/features/copilot) - This ***litle fella*** helped me alot in the whole process of building this project, i'm amazed about the things AI are capable of these days.
+[Github Copilot](https://github.com/features/copilot) - This **_litle fella_** helped me alot in the whole process of building this project, i'm amazed about the things AI are capable of these days.
