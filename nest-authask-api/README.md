@@ -259,7 +259,7 @@ If you already uploaded an image but want to change it, just repeat these steps.
 
 The message from the response may be slightly different in some cases, but the object follows this structure:
 
-```json
+```ts
 {
   message: 'Profile picture updated successfully',
   uploaded: true,
@@ -270,7 +270,7 @@ The message from the response may be slightly different in some cases, but the o
 
 To delete the current user profile picture access the endpoint `/profile/upload` with DELETE method, if the current user has an associated pfp to delete, you'll receive:
 
-``` json
+```ts
 {
   message: 'Profile picture deleted successfully',
   deleted: true,
