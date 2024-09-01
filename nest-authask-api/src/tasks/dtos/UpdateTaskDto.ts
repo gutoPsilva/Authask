@@ -6,8 +6,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { TaskStatus } from 'src/utils/interfaces e types/task.interface';
-
+import { TaskStatus } from 'src/utils/interfaces_types/task.interface';
 export class UpdateTaskDto {
   @IsOptional()
   @IsString()

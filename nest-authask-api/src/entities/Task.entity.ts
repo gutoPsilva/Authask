@@ -1,4 +1,3 @@
-import { TaskStatus } from 'src/utils/interfaces e types/task.interface';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,7 @@ import {
 } from 'typeorm';
 import { LocalUser } from './LocalUser.entity';
 import { DiscordUser } from './DiscordUser.entity';
+import { TaskStatus } from '../utils/interfaces_types/task.interface';
 
 @Entity({ name: 'tasks' })
 export class Task {

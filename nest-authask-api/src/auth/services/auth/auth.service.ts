@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DiscordUser } from 'src/entities/DiscordUser.entity';
 import { LocalUser } from 'src/entities/LocalUser.entity';
 import { UsersService } from 'src/users/services/users/users.service';
-import { DiscordUserDetails } from 'src/utils/interfaces e types/user.interface';
+import { DiscordUserDetails } from 'src/utils/interfaces_types/user.interface';
 import { comparePassword } from 'src/utils/password';
 
 @Injectable()

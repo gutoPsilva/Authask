@@ -4,12 +4,14 @@ import { DiscordUser } from 'src/entities/DiscordUser.entity';
 import { LocalUser } from 'src/entities/LocalUser.entity';
 import { Task } from 'src/entities/Task.entity';
 import { validateDate } from 'src/utils/dateManipulators';
+
+import { Repository } from 'typeorm';
 import {
   ICreateTaskDetails,
   ITaskInfo,
   IUpdateTaskDetails,
-} from 'src/utils/interfaces e types/task.interface';
-import { Repository } from 'typeorm';
+  TaskStatus
+} from '../../../utils/interfaces_types/task.interface';
 
 @Injectable()
 export class TasksService {
@@ -78,8 +80,10 @@ export class TasksService {
 
     // i decided to disable the eslint rule below because i want to return only the task info, and not the users info, so TS won't complain about not using the variables discordUser and localUser
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { discordUser, localUser, ...taskInfo } = savedTask;
+    const {...taskInfo } = savedTask;
+
+    // delete savedTask.discordUser;
+    // delete savedTask.localUser;
 
     return taskInfo;
   }
@@ -125,8 +129,10 @@ export class TasksService {
 
       const savedTask = await this.taskRepository.save(updatedTask);
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { discordUser, localUser, ...taskInfo } = savedTask;
+      const { ...taskInfo } = savedTask;
+      
+      // delete savedTask.discordUser;
+      // delete savedTask.localUser;
 
       return taskInfo;
     } catch (err) {

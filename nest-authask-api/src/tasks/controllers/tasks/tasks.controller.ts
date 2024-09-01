@@ -10,13 +10,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthenticatedGuard } from 'src/auth/utils/Guards/AuthGuards';
-import { TasksService } from 'src/tasks/services/tasks/tasks.service';
 import { Request } from 'express';
-import { DiscordUser } from 'src/entities/DiscordUser.entity';
-import { LocalUser } from 'src/entities/LocalUser.entity';
-import { CreateTaskDto } from 'src/tasks/dtos/CreateTaskDto';
-import { UpdateTaskDto } from 'src/tasks/dtos/UpdateTaskDto';
+import { CreateTaskDto } from '../../dtos/CreateTaskDTO';
+import { UpdateTaskDto } from '../../dtos/UpdateTaskDto';
+import { LocalUser } from '../../../entities/LocalUser.entity';
+import { DiscordUser } from '../../../entities/DiscordUser.entity';
+import { AuthenticatedGuard } from '../../../auth/utils/Guards/AuthGuards';
+import { TasksService } from '../../services/tasks/tasks.service';
 
 @Controller('tasks')
 export class TasksController {

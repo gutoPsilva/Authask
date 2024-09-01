@@ -8,7 +8,7 @@ import { PassTokens } from 'src/entities/PassTokens.entity';
 import {
   DiscordUserDetails,
   LocalUserDetails,
-} from 'src/utils/interfaces e types/user.interface';
+} from 'src/utils/interfaces_types/user.interface';
 import { comparePassword, hashPassword } from 'src/utils/password';
 import { Repository } from 'typeorm';
 

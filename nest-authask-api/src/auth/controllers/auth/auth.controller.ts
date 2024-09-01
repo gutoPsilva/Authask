@@ -11,7 +11,6 @@ import {
   HttpCode,
   Patch,
 } from '@nestjs/common';
-import { RegisterLocalUserDto } from 'src/auth/dtos/registerLocalUser.dto';
 import {
   AuthenticatedGuard,
   DiscordAuthGuard,
@@ -22,6 +21,7 @@ import { Request } from 'express';
 import { ResetLocalPassDto } from 'src/auth/dtos/ResetLocalPass.dto';
 import { UpdateLocalPassDto } from 'src/auth/dtos/UpdateLocalPass.dto';
 import { LocalUser } from 'src/entities/LocalUser.entity';
+import { RegisterLocalUserDto } from '../../dtos/RegisterLocalUser.dto';
 
 @Controller('auth')
 export class AuthController {

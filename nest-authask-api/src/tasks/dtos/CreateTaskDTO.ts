@@ -6,8 +6,7 @@ import {
   IsOptional,
   MaxLength,
 } from 'class-validator';
-import { TaskStatus } from 'src/utils/interfaces e types/task.interface';
-
+import { TaskStatus } from '../../utils/interfaces_types/task.interface';
 export class CreateTaskDto {
   @IsNotEmpty()
   @MaxLength(255)

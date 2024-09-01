@@ -4,7 +4,7 @@ import { LocalUser } from 'src/entities/LocalUser.entity';
 import { UsersService } from 'src/users/services/users/users.service';
 import { DoneCallback } from 'passport';
 import { DiscordUser } from 'src/entities/DiscordUser.entity';
-import { userStrategy } from 'src/utils/interfaces e types/user.interface';
+import { userStrategy } from 'src/utils/interfaces_types/user.interface';
 
 export class SessionSerializer extends PassportSerializer {
   constructor(
